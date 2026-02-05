@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Meus Chamados</title>
+</head>
+
+<body>
+    <div layout:fragment="page-header">
+        <div style="display: flex; flex-direction: column;">
+            <span
+                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Central
+                de Atendimento</span>
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0; letter-spacing: -0.02em;">
+                Meus Chamados</h2>
+        </div>
+    </div>
+
+    <div layout:fragment="page-actions">
+        <a th:href="@{/resident/tickets/new}" class="btn btn-primary"
+            style="padding: 0.625rem 1.25rem; gap: 0.5rem; box-shadow: var(--shadow-soft);">
+            <i data-lucide="plus" style="width: 18px;"></i>
+            Novo Chamado
+        </a>
+    </div>
+
+    <div layout:fragment="content" class="animate-fade-in">
+        <!-- Stats Row -->
+        <div
+            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg);">
+            <div class="card"
+                style="border-left: 4px solid var(--accent); display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+                <div
+                    style="width: 44px; height: 44px; background: rgba(59, 130, 246, 0.1); color: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="layers" style="width: 24px;"></i>
+                </div>
+                <div>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Total</span>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0;"
+                        th:text="${statsTotal}">0</h3>
+                </div>
+            </div>
+            <div class="card"
+                style="border-left: 4px solid var(--warning); display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+                <div
+                    style="width: 44px; height: 44px; background: rgba(245, 158, 11, 0.1); color: var(--warning); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="clock" style="width: 24px;"></i>
+                </div>
+                <div>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Em
+                        Aberto</span>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0;"
+                        th:text="${statsOpen}">0</h3>
+                </div>
+            </div>
+            <div class="card"
+                style="border-left: 4px solid var(--success); display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+                <div
+                    style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.1); color: var(--success); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="check-circle" style="width: 24px;"></i>
+                </div>
+                <div>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Concluídos</span>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0;"
+                        th:text="${statsDone}">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="card"
+            style="margin-bottom: var(--space-md); padding: 1rem 1.5rem; border: 1px solid var(--border-light); background: white;">
+            <form th:action="@{/resident/tickets}" method="get" style="display: flex; gap: 1rem; align-items: center;">
+                <div style="flex: 1; position: relative;">
+                    <i data-lucide="search"
+                        style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 18px; color: var(--text-muted);"></i>
+                    <input type="text" name="search" th:value="${search}"
+                        placeholder="Pesquisar chamados por título ou descrição..."
+                        style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border-radius: var(--radius-md); border: 2px solid var(--border-light); background: var(--surface-sunken); font-size: 0.9375rem; outline: none; transition: border-color 0.2s;"
+                        onfocus="this.style.borderColor='var(--accent)'"
+                        onblur="this.style.borderColor='var(--border-light)'">
+                </div>
+                <button type="submit" class="btn btn-primary"
+                    style="padding: 0.75rem 2rem; border-radius: var(--radius-md); font-weight: 700;">Filtrar</button>
+                <a th:href="@{/resident/tickets}" th:if="${search != null && search != ''}" class="btn btn-ghost"
+                    style="color: var(--text-muted);">Limpar</a>
+            </form>
+        </div>
+
+        <!-- Table Container -->
+        <div class="premium-table-container" style="box-shadow: var(--shadow-soft); border: 1px solid var(--border);">
+            <div
+                style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-light); background: linear-gradient(to right, #ffffff, #f8fafc); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--primary); margin: 0;">Histórico de
+                    Solicitações</h3>
+                <span style="font-size: 0.8125rem; font-weight: 700; color: var(--text-muted);"
+                    th:text="${totalCount} + ' chamados encontrados'">0 chamados encontrados</span>
+            </div>
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th style="padding-left: 1.5rem;">Chamado</th>
+                        <th>Categoria</th>
+                        <th>Status</th>
+                        <th>Abertura</th>
+                        <th style="text-align: right; padding-right: 1.5rem;">Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ticket : ${tickets}">
+                        <td style="padding-left: 1.5rem;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;"
+                                th:text="${ticket.title}">Título</div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <i data-lucide="user" style="width: 12px; color: var(--text-muted);"></i>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;"
+                                    th:text="${ticket.anonymous and !#authorization.expression('hasAnyRole(''SINDICA'', ''ZELADOR'', ''ADMIN'')') ? 'Morador Anônimo' : (ticket.author != null ? ticket.author.fullName + ' (' + ticket.author.unit + ')' : 'Desconhecido')}">Autor</span>
+                            </div>
+                            <p style="margin: 0; color: var(--text-muted); font-size: 0.8125rem; display: -webkit-box; -webkit-line-clamp: 1; line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;"
+                                th:text="${ticket.description}">Descrição...</p>
+                        </td>
+                        <td>
+                            <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(ticket.type)}"
+                                style="font-size: 0.65rem; padding: 0.35rem 0.75rem;">
+                                <i data-lucide="tag" style="width: 10px; margin-right: 4px;"></i>
+                                <span th:text="${ticket.type}">Categoria</span>
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <span class="ticket-status-dot"
+                                    th:classappend="'status-' + ${#strings.toLowerCase(ticket.status)}"></span>
+                                <span
+                                    th:text="${ticket.status.name() == 'NOVO' ? 'Novo' : (ticket.status.name() == 'EM_ANDAMENTO' ? 'Em Andamento' : (ticket.status.name() == 'CONCLUIDO' ? 'Concluído' : 'Cancelado'))}"
+                                    style="font-weight: 700; font-size: 0.75rem; color: var(--primary); text-transform: uppercase;">Status</span>
+                            </div>
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.8125rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i data-lucide="calendar" style="width: 14px; opacity: 0.5;"></i>
+                                <span th:text="${#temporals.format(ticket.createdAt, 'dd MMM, yyyy')}">01 Jan,
+                                    2024</span>
+                            </div>
+                        </td>
+                        <td style="text-align: right; padding-right: 1.5rem;">
+                            <a th:href="@{/resident/tickets/view/{id}(id=${ticket.id})}" class="btn"
+                                style="width: 36px; height: 36px; padding: 0; background: var(--surface-sunken); color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                                <i data-lucide="chevron-right" style="width: 20px;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(tickets)}">
+                        <td colspan="5" style="padding: 6rem 2rem; text-align: center;">
+                            <div
+                                style="width: 80px; height: 80px; background: var(--surface-sunken); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--text-light);">
+                                <i data-lucide="inbox" style="width: 40px; height: 40px;"></i>
+                            </div>
+                            <h3
+                                style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">
+                                Nenhum chamado encontrado</h3>
+                            <p style="color: var(--text-muted); max-width: 300px; margin: 0 auto;">Tente ajustar sua
+                                pesquisa ou limpe os filtros para ver todos os chamados.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div th:if="${totalPages > 1}"
+            style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2.5rem; padding-bottom: 2rem;">
+            <a th:if="${currentPage > 0}" th:href="@{/resident/tickets(page=${currentPage - 1}, search=${search})}"
+                class="btn"
+                style="background: white; border: 1px solid var(--border); color: var(--primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="chevron-left" style="width: 18px;"></i> Anterior
+            </a>
+
+            <div style="display: flex; gap: 0.35rem;">
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:href="@{/resident/tickets(page=${i}, search=${search})}" class="btn"
+                    th:style="${i == currentPage ? 'background: var(--primary); color: white; border: 1px solid var(--primary);' : 'background: white; border: 1px solid var(--border); color: var(--primary);'}"
+                    style="width: 40px; height: 40px; border-radius: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.9375rem;"
+                    th:text="${i + 1}">1</a>
+            </div>
+
+            <a th:if="${currentPage < totalPages - 1}"
+                th:href="@{/resident/tickets(page=${currentPage + 1}, search=${search})}" class="btn"
+                style="background: white; border: 1px solid var(--border); color: var(--primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                Próxima <i data-lucide="chevron-right" style="width: 18px;"></i>
+            </a>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+
+</html>

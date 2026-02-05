@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title th:text="${news.title}">Notícia</title>
+</head>
+
+<body>
+    <div layout:fragment="page-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.8125rem; font-weight: 500;">
+            <a href="/"
+                style="color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="home" style="width: 14px;"></i> Início
+            </a>
+            <i data-lucide="chevron-right" style="width: 12px; color: var(--text-light);"></i>
+            <span style="color: var(--primary);">Notícia</span>
+        </div>
+    </div>
+
+    <div layout:fragment="content">
+        <div class="news-detail-container animate-fade-in">
+            <!-- Header Section -->
+            <header class="news-header">
+                <span class="news-category-badge"
+                    th:text="${news.comments.size() > 5 ? 'Populares' : 'Comunicado'}">Comunicado</span>
+                <h1 class="news-detail-title" th:text="${news.title}">Título da Notícia</h1>
+
+                <div class="news-author-meta">
+                    <div class="author-avatar-img">
+                        <i data-lucide="user" style="width: 24px;"></i>
+                    </div>
+                    <div class="author-details">
+                        <span class="author-name-text"
+                            th:text="${news.author != null ? news.author.fullName : 'Administração'}"
+                            style="display: block; font-weight: 700; font-size: 1rem; color: var(--primary);">Autor</span>
+                        <span class="publish-date-text" style="font-size: 0.875rem; color: var(--text-muted);">
+                            Publicado em <span
+                                th:text="${#temporals.format(news.publishDate, 'dd MMM, yyyy')}">Data</span>
+                            • <span th:text="${#temporals.format(news.publishDate, 'HH:mm')}">Hora</span>
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="news-main-grid">
+                <!-- Main Content Column -->
+                <div class="news-article-column">
+                    <!-- Featured Image -->
+                    <figure class="featured-media" th:if="${!news.images.empty}">
+                        <img th:src="@{'/uploads' + ${news.images[0].imageUrl}}" th:alt="${news.title}">
+                    </figure>
+
+                    <!-- Content Area -->
+                    <div class="article-text-content">
+                        <p th:text="${news.content}" style="white-space: pre-line;">Conteúdo...</p>
+                    </div>
+
+                    <!-- Gallery (if any) -->
+                    <div th:if="${news.images.size() > 1}" style="margin-bottom: var(--space-xl);">
+                        <h3
+                            style="font-size: 1.5rem; font-weight: 800; margin-bottom: var(--space-md); color: var(--primary);">
+                            Galeria de Fotos</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div th:each="image, iterStat : ${news.images}" th:if="${iterStat.index > 0}"
+                                style="border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft);">
+                                <img th:src="@{'/uploads' + ${image.imageUrl}}"
+                                    style="width: 100%; height: 250px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <section class="comments-section" id="comments">
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-md);">
+                            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">Comentários</h2>
+                            <span class="badge"
+                                style="background: var(--surface-sunken); color: var(--primary); padding: 0.4rem 0.8rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600;"
+                                th:text="${news.comments.size() + ' respostas'}">X respostas</span>
+                        </div>
+
+                        <!-- Comment Form -->
+                        <div class="card"
+                            style="margin-bottom: var(--space-lg); background: var(--surface-sunken); border: none; border-radius: var(--radius-lg); overflow: hidden;">
+                            <form th:action="@{/news/{id}/comment(id=${news.id})}" method="post">
+                                <textarea name="text"
+                                    style="width: 100%; background: transparent; border: none; padding: 1.25rem; font-family: inherit; font-size: 1rem; outline: none; resize: none; min-height: 100px; color: var(--primary-light);"
+                                    placeholder="Participe da conversa..." required></textarea>
+                                <div
+                                    style="padding: 0.75rem 1.25rem; border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: flex-end; background: rgba(255,255,255,0.3);">
+                                    <button type="submit" class="btn btn-primary"
+                                        style="padding: 0.5rem 2rem; border-radius: var(--radius-full); font-weight: 700;">Publicar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Comment List -->
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <article th:each="comment : ${news.comments}" class="comment-card animate-fade-in"
+                                style="background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.25rem;">
+                                <div class="comment-header"
+                                    style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div
+                                        style="width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700;">
+                                        <span th:text="${#strings.substring(comment.author.fullName, 0, 1)}">U</span>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <span class="comment-author"
+                                                style="font-weight: 700; color: var(--primary); font-size: 0.9375rem;"
+                                                th:text="${comment.author.fullName}">Nome</span>
+                                            <span
+                                                style="font-size: 0.7rem; color: var(--text-light); font-weight: 600; background: var(--surface-sunken); padding: 0.1rem 0.5rem; border-radius: 4px;"
+                                                th:text="${comment.author.unit}">Unidade</span>
+                                        </div>
+                                        <span class="comment-date" style="font-size: 0.75rem; color: var(--text-muted);"
+                                            th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')}">Data</span>
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.9375rem; color: var(--primary-light); margin: 0; line-height: 1.5;"
+                                    th:text="${comment.text}">Comentário...</p>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Sidebar Sidebar Column -->
+                <aside class="news-sidebar-column">
+                    <div class="sidebar-contacts">
+                        <div class="card">
+                            <h3
+                                style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i data-lucide="help-circle" style="width: 20px; color: var(--accent);"></i>
+                                Precisa de ajuda?
+                            </h3>
+
+                            <!-- Dynamic Contacts from DB -->
+                            <div th:if="${not #lists.isEmpty(globalHelpContacts)}"
+                                style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                <div th:each="contact : ${globalHelpContacts}"
+                                    style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); last-child { border-bottom: none; }">
+
+                                    <span
+                                        style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-light); display: block; margin-bottom: 0.25rem;"
+                                        th:text="${contact.role}">Cargo</span>
+
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-weight: 700; color: var(--primary); font-size: 0.9375rem;"
+                                            th:text="${contact.name}">Nome</span>
+                                        <span th:if="${contact.emergency}"
+                                            style="background: #fef2f2; color: #ef4444; font-size: 0.6rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 4px; border: 1px solid #fee2e2;">
+                                            URGENTE
+                                        </span>
+                                    </div>
+
+                                    <a th:href="'tel:' + ${contact.phoneNumber}"
+                                        style="display: block; font-size: 1.125rem; color: var(--primary); font-family: monospace; text-decoration: none; font-weight: 700; margin-top: 0.25rem;"
+                                        th:text="${contact.phoneNumber}">0000-0000</a>
+                                </div>
+                            </div>
+
+                            <div th:if="${#lists.isEmpty(globalHelpContacts)}"
+                                style="text-align: center; padding: 1rem 0;">
+                                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Nenhum contato
+                                    cadastrado.</p>
+                            </div>
+
+                            <p
+                                style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; margin-top: 1rem; font-style: italic; opacity: 0.8;">
+                                Para emergências prediais graves, utilize os ramais acima.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4
+                        style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light);">
+                        Telefones Úteis</h4>
+
+                    <div class="contact-list">
+                        <div class="contact-item" th:each="contact : ${helpContacts}" th:if="${!contact.emergency}">
+                            <div class="contact-icon-wrapper">
+                                <i data-lucide="phone" style="width: 16px;"></i>
+                            </div>
+                            <div>
+                                <span
+                                    style="display: block; font-size: 0.875rem; font-weight: 700; color: var(--primary);"
+                                    th:text="${contact.name} + (${contact.role != null and !contact.role.empty} ? ' (' + ${contact.role} + ')' : '')">Nome
+                                    (Cargo)</span>
+                                <a th:href="'tel:' + ${contact.phoneNumber}"
+                                    style="font-size: 0.8125rem; color: var(--accent); text-decoration: none; font-weight: 500;"
+                                    th:text="${contact.phoneNumber}">Telefone</a>
+                            </div>
+                        </div>
+                        <div th:if="${helpContacts.empty}" class="text-muted" style="font-size: 0.8rem;">
+                            Nenhum contato cadastrado.
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <!-- Discovery / More News Section (Inside Sidebar) -->
+        <section class="sidebar-discovery">
+            <h3
+                style="font-size: 1.125rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 0.625rem;">
+                <div
+                    style="width: 32px; height: 32px; background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="newspaper" style="width: 18px;"></i>
+                </div>
+                Continue Lendo
+            </h3>
+            <div class="discovery-grid">
+                <a th:each="recent, iterStat : ${recentNews}" th:if="${recent.id != news.id and iterStat.index < 3}"
+                    th:href="@{/news/{id}(id=${recent.id})}" class="news-card-portal">
+                    <div class="discovery-image-container">
+                        <img th:if="${!recent.images.empty}" th:src="@{'/uploads' + ${recent.images[0].imageUrl}}"
+                            class="news-image">
+                        <div th:unless="${!recent.images.empty}" style="color: var(--text-light); opacity: 0.2;">
+                            <i data-lucide="image" style="width: 48px; height: 48px;"></i>
+                        </div>
+                    </div>
+                    <div class="news-content-portal">
+                        <h4 th:text="${#strings.abbreviate(recent.title, 60)}">Título</h4>
+                    </div>
+                </a>
+            </div>
+        </section>
+        </aside>
+    </div>
+    </div>
+    </div>
+    </div>
+</body>
+
+</html>

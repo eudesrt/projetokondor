@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Portal Kondor - Notícias do Condomínio</title>
+</head>
+
+<body>
+    <div layout:fragment="page-header">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0; letter-spacing: -0.02em;">
+            Início</h2>
+    </div>
+
+    <div layout:fragment="content" class="animate-fade-in">
+        <!-- Admin Notifications -->
+        <div th:if="${(pendingCount != null && pendingCount > 0) || (newTicketsCount != null && newTicketsCount > 0)}"
+            style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: var(--space-lg);">
+
+            <!-- Pending Mortador Approval -->
+            <div th:if="${pendingCount != null && pendingCount > 0}" class="card"
+                style="background: #fff7ed; border-color: #fed7aa; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="width: 44px; height: 44px; background: #ffedd5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ea580c;">
+                        <i data-lucide="user-plus" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; color: #9a3412; font-size: 1rem; font-weight: 700;">Aprovações de
+                            Moradores</h4>
+                        <p style="margin: 0; color: #c2410c; font-size: 0.875rem;">Há <strong
+                                th:text="${pendingCount}">0</strong> novos cadastros aguardando liberação.</p>
+                    </div>
+                </div>
+                <a th:href="@{/admin/residents(status='PENDING')}" class="btn"
+                    style="background: #ea580c; color: white;">Gerenciar</a>
+            </div>
+
+            <!-- New Ticket Alert -->
+            <div th:if="${newTicketsCount != null && newTicketsCount > 0}" class="card"
+                style="background: #eff6ff; border-color: #bfdbfe; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="width: 44px; height: 44px; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #2563eb;">
+                        <i data-lucide="message-square" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; color: #1e40af; font-size: 1rem; font-weight: 700;">Novos Chamados</h4>
+                        <p style="margin: 0; color: #1e3a8a; font-size: 0.875rem;">Você tem <strong
+                                th:text="${newTicketsCount}">0</strong> chamados pendentes de análise.</p>
+                    </div>
+                </div>
+                <a th:href="@{/admin/tickets}" class="btn" style="background: #2563eb; color: white;">Gerenciar</a>
+            </div>
+        </div>
+
+        <div th:if="${heroNews == null and latestNews.empty}" class="empty-state">
+            <i data-lucide="newspaper" class="empty-icon"></i>
+            <h3>Silêncio no condomínio</h3>
+            <p>Ainda não há comunicados publicados.</p>
+        </div>
+
+        <div>
+            <!-- HERO SECTION -->
+            <section th:if="${heroNews != null}" class="hero-section" style="margin-bottom: 2.5rem;">
+                <a th:href="@{/news/{id}(id=${heroNews.id})}" class="hero-card">
+                    <div class="hero-image-container" id="hero-container">
+                        <img th:if="${!heroNews.images.empty}" th:src="@{'/uploads' + ${heroNews.images[0].imageUrl}}"
+                            class="hero-image" id="hero-image" crossorigin="anonymous">
+                    </div>
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content">
+                        <span class="hero-badge" style="background: var(--accent); color: white;">Destaque</span>
+                        <h2 class="hero-title" th:text="${heroNews.title}">Título do Destaque</h2>
+                        <p class="hero-excerpt" th:text="${#strings.abbreviate(heroNews.content, 180)}">Resumo...</p>
+                        <div
+                            style="display: flex; align-items: center; gap: 1.5rem; font-size: 0.875rem; opacity: 0.9;">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="calendar"
+                                    style="width: 16px;"></i> <span
+                                    th:text="${#temporals.format(heroNews.publishDate, 'dd MMM, yyyy')}">Data</span></span>
+                            <span th:if="${heroNews.author != null}" class="d-none d-md-flex"
+                                style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="user"
+                                    style="width: 16px;"></i> <span
+                                    th:text="${heroNews.author.fullName}">Autor</span></span>
+                        </div>
+                    </div>
+                </a>
+            </section>
+
+            <!-- ULTRA-PREMIUM HELP HUB -->
+            <div th:if="${not #lists.isEmpty(globalHelpContacts)}" class="help-hub animate-fade-in">
+                <div class="help-hub-header">
+                    <i data-lucide="shield-check" style="width: 20px; color: var(--accent);"></i>
+                    <h3 class="help-hub-title">Central de Apoio e Contatos</h3>
+                </div>
+
+                <div class="help-hub-grid">
+                    <div th:each="contact : ${globalHelpContacts}" class="contact-card-premium"
+                        th:classappend="${contact.emergency ? 'emergency-premium' : ''}">
+
+                        <span class="role-label" th:text="${contact.role}">Cargo</span>
+                        <h4 class="name-label" th:text="${contact.name}">Nome</h4>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: auto;">
+                            <a th:href="'tel:' + ${contact.phoneNumber}" class="contact-action-btn">
+                                <i data-lucide="phone-call" style="width: 16px;"></i>
+                                <span th:text="${contact.phoneNumber}">0000-0000</span>
+                            </a>
+
+                            <a th:if="${contact.whatsapp}"
+                                th:with="message='Olá sou ' + (${currentUser != null ? currentUser.fullName : 'Morador'}) + ' da unidade ' + (${currentUser != null ? currentUser.unit : '...'}) + ' e preciso de um apoio.'"
+                                th:href="'https://wa.me/' + ${#strings.replace(#strings.replace(#strings.replace(#strings.replace(contact.phoneNumber, ' ', ''), '-', ''), '(', ''), ')', '')} + '?text=' + ${#uris.escapeQueryParam(message)}"
+                                target="_blank" class="contact-action-btn"
+                                style="color: #25D366; border-color: rgba(37, 211, 102, 0.2); background: rgba(37, 211, 102, 0.05);"
+                                onmouseover="this.style.background='#25D366'; this.style.color='white'; this.style.boxShadow='0 0 15px rgba(37, 211, 102, 0.4)'"
+                                onmouseout="this.style.background='rgba(37, 211, 102, 0.05)'; this.style.color='#25D366'; this.style.boxShadow='none'">
+                                <i data-lucide="message-circle" style="width: 16px;"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="row g-4">
+                <!-- NEWS GRID (Left Column) -->
+                <div class="col-lg-8">
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">Últimas Atualizações
+                        </h3>
+                        <a th:href="@{/news}" class="btn btn-sm btn-ghost"
+                            style="color: var(--accent); font-weight: 600;">Ver Tudo <i data-lucide="arrow-right"
+                                style="width: 16px; margin-left: 4px;"></i></a>
+                    </div>
+
+                    <div class="news-portal-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                        <article th:each="news, iterStat : ${latestNews}" class="news-card-portal animate-fade-in"
+                            th:style="|animation-delay: ${iterStat.index * 0.1}s|">
+                            <a th:href="@{/news/{id}(id=${news.id})}"
+                                style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
+                                <div class="news-image-container" style="height: 160px;">
+                                    <img th:if="${!news.images.empty}"
+                                        th:src="@{'/uploads' + ${news.images[0].imageUrl}}" class="news-image">
+                                    <div th:unless="${!news.images.empty}"
+                                        style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background: var(--surface-sunken); color: var(--text-light);">
+                                        <i data-lucide="image" style="width:32px; height:32px; opacity:0.2;"></i>
+                                    </div>
+                                </div>
+                                <div class="news-content-portal" style="padding: 1.25rem;">
+                                    <div class="news-meta" style="margin-bottom: 0.5rem;">
+                                        <span style="font-size: 0.75rem;"><i data-lucide="calendar"
+                                                style="width: 12px; margin-right: 4px; vertical-align: middle;"></i>
+                                            <span
+                                                th:text="${#temporals.format(news.publishDate, 'dd/MM/yyyy')}">Data</span></span>
+                                    </div>
+                                    <h2 class="news-title-portal" style="font-size: 1rem; margin-bottom: 0.5rem;"
+                                        th:text="${news.title}">Título</h2>
+                                    <p class="news-excerpt"
+                                        style="font-size: 0.8125rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
+                                        th:text="${#strings.abbreviate(news.content, 80)}">Resumo...</p>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- TICKETS PANEL (Right Column) -->
+                <div class="col-lg-4">
+                    <div class="card"
+                        style="border: 1px solid var(--border); overflow: hidden; height: 100%; box-shadow: var(--shadow-soft);">
+                        <div
+                            style="padding: 1.25rem; border-bottom: 1px solid var(--border-light); background: linear-gradient(to right, #ffffff, #f8fafc); display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div
+                                    style="width: 38px; height: 38px; background: var(--surface-sunken); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--accent);">
+                                    <i data-lucide="inbox" style="width: 20px;"></i>
+                                </div>
+                                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--primary); margin: 0;">
+                                    Meus Chamados</h3>
+                            </div>
+                            <a th:href="@{/resident/tickets/new}" class="btn btn-primary"
+                                style="padding: 0.5rem 1rem; font-size: 0.8125rem; border-radius: var(--radius-md); font-weight: 700;">+
+                                Novo</a>
+                        </div>
+
+                        <div style="padding: 0;">
+                            <div th:if="${recentTickets.empty}" style="text-align: center; padding: 3rem 1rem;">
+                                <i data-lucide="check-circle"
+                                    style="width: 32px; height: 32px; color: var(--success); opacity: 0.5; margin-bottom: 0.5rem;"></i>
+                                <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Você não tem
+                                    chamados recentes.</p>
+                            </div>
+
+                            <ul th:unless="${recentTickets.empty}" style="list-style: none; padding: 0; margin: 0;">
+                                <li th:each="ticket : ${recentTickets}"
+                                    style="border-bottom: 1px solid var(--border-light);">
+                                    <a th:href="@{/resident/tickets/view/{id}(id=${ticket.id})}"
+                                        style="display: block; padding: 1rem; text-decoration: none; color: inherit; transition: background 0.2s;"
+                                        onmouseover="this.style.background='var(--surface-sunken)'"
+                                        onmouseout="this.style.background='white'">
+                                        <div
+                                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
+                                            <div style="display: flex; flex-direction: column;">
+                                                <span
+                                                    style="font-size: 0.8125rem; font-weight: 700; color: var(--primary);"
+                                                    th:text="${ticket.title != null ? #strings.abbreviate(ticket.title, 30) : 'Chamado #' + ticket.id}">Título</span>
+                                                <div
+                                                    style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; display: flex; align-items: center; gap: 0.4rem;">
+                                                    <i data-lucide="user" style="width: 10px;"></i>
+                                                    <span
+                                                        th:text="${ticket.anonymous and (pendingCount == null or pendingCount == 0) and (newTicketsCount == null or newTicketsCount == 0) ? 'Morador Anônimo' : (ticket.author != null ? ticket.author.fullName + ' (' + ticket.author.unit + ')' : 'Desconhecido')}">Autor</span>
+                                                </div>
+                                            </div>
+                                            <span class="badge" th:text="${ticket.status}"
+                                                th:classappend="${ticket.status.name() == 'NOVO' ? 'bg-info-subtle text-info' : (ticket.status.name() == 'EM_ANDAMENTO' ? 'bg-warning-subtle text-warning' : (ticket.status.name() == 'CONCLUIDO' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle'))}"
+                                                style="font-size: 0.65rem; padding: 0.2rem 0.5rem;">STATUS</span>
+                                        </div>
+                                        <div
+                                            style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-light);">
+                                            <span th:text="${ticket.type}">TIPO</span>
+                                            <span
+                                                th:text="${#temporals.format(ticket.createdAt, 'dd/MM HH:mm')}">Data</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div th:if="${ticketsPage.totalPages > 1}"
+                            style="padding: 0.75rem; border-top: 1px solid var(--border-light); display: flex; justify-content: center; align-items: center; gap: 1rem; background: var(--surface-sunken);">
+                            <a th:if="${ticketsPage.hasPrevious()}" th:href="@{/(ticketPage=${ticketsPage.number - 1})}"
+                                class="btn btn-sm btn-ghost" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                <i data-lucide="chevron-left" style="width: 14px; margin-right: 2px;"></i> Anterior
+                            </a>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">
+                                <span th:text="${ticketsPage.number + 1}">1</span> / <span
+                                    th:text="${ticketsPage.totalPages}">1</span>
+                            </span>
+                            <a th:if="${ticketsPage.hasNext()}" th:href="@{/(ticketPage=${ticketsPage.number + 1})}"
+                                class="btn btn-sm btn-ghost" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                Próximo <i data-lucide="chevron-right" style="width: 14px; margin-left: 2px;"></i>
+                            </a>
+                        </div>
+
+                        <div style="padding: 0.75rem; border-top: 1px solid var(--border-light); text-align: center;">
+                            <a th:href="@{/resident/tickets}"
+                                style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-decoration: none;">Ver
+                                Histórico Completo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

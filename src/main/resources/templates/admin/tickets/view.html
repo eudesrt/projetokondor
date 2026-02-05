@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Gerenciar Chamado</title>
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: calc(-2rem - 5px);
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+        }
+
+        .attachment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .attachment-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .response-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="page-header" style="display: flex; align-items: center; gap: 1rem;">
+        <a th:href="@{/admin/tickets}" class="btn"
+            style="padding: 0.5rem; background: var(--surface-sunken); color: var(--primary);">
+            <i data-lucide="arrow-left" style="width: 20px;"></i>
+        </a>
+        <div style="display: flex; flex-direction: column;">
+            <span
+                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Gestão
+                do Chamado</span>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 0;"
+                th:text="'#' + ${ticket.id} + ' - ' + ${ticket.title}">#123 - Título</h2>
+        </div>
+    </div>
+
+    <div layout:fragment="content" class="animate-fade-in">
+        <div style="display: grid; grid-template-columns: 2.5fr 1fr; gap: var(--space-lg);">
+
+            <!-- Left Column: Thread & Management -->
+            <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+
+                <!-- Initial Request Analysis Card -->
+                <div class="card" style="border-left: 4px solid var(--accent);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(ticket.type)}"
+                                th:text="${ticket.type}">Categoria</span>
+                            <span th:if="${ticket.parentTicket != null}" class="badge"
+                                style="background: var(--surface-sunken); color: var(--text-muted);">Vinculado</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span class="ticket-status-dot"
+                                th:classappend="'status-' + ${#strings.toLowerCase(ticket.status)}"></span>
+                            <span th:text="${ticket.status}"
+                                style="font-weight: 700; font-size: 0.875rem; color: var(--primary);">STATUS</span>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 1.125rem; line-height: 1.6; color: var(--primary-light); white-space: pre-wrap; margin-bottom: var(--space-md);"
+                        th:text="${ticket.description}">Descrição...</p>
+
+                    <div th:if="${not #lists.isEmpty(ticket.attachments)}"
+                        style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--border-light);">
+                        <div th:each="att : ${ticket.attachments}"
+                            style="width: 120px; height: 120px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-light);">
+                            <a th:href="${att.imageUrl}" target="_blank">
+                                <img th:src="${att.imageUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation History -->
+                <div
+                    style="padding-left: 1.5rem; border-left: 2px solid var(--border-light); margin-left: 1rem; display: flex; flex-direction: column; gap: var(--space-md);">
+                    <div th:each="update : ${ticket.updates}" class="animate-fade-in" style="position: relative;">
+                        <!-- Timeline Dot -->
+                        <div
+                            style="position: absolute; left: -1.5rem; top: 1.25rem; transform: translateX(-50%); width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border);">
+                        </div>
+
+                        <div class="card" style="padding: 1.25rem; border: 1px solid var(--border-light);"
+                            th:styleappend="${update.author == ticket.author ? 'border-left: 2px solid var(--accent);' : 'background: white; border-bottom: 2px solid var(--primary);'}">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-weight: 700; color: var(--primary); font-size: 0.9375rem;"
+                                        th:text="${update.author.fullName}">Nome</span>
+                                    <span th:if="${update.author != ticket.author}" class="badge"
+                                        style="font-size: 0.65rem; background: var(--primary); color: white;">Equipe
+                                        Kondor</span>
+                                </div>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);"
+                                    th:text="${#temporals.format(update.createdAt, 'dd MMM, HH:mm')}">Data</span>
+                            </div>
+                            <p style="margin: 0; color: var(--primary-light); line-height: 1.5; font-size: 0.9375rem;"
+                                th:text="${update.message}">Mensagem...</p>
+
+                            <!-- Internal info Badge -->
+                            <div th:if="${update.additionalInfo != null && !update.additionalInfo.empty}"
+                                style="margin-top: 0.75rem; padding: 0.5rem 0.75rem; background: var(--surface-sunken); border-radius: var(--radius-sm); font-size: 0.75rem;">
+                                <span
+                                    style="color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.65rem; display: block; margin-bottom: 0.125rem;">Notas
+                                    de Tratativa</span>
+                                <span th:text="${update.additionalInfo}"
+                                    style="color: var(--primary); font-weight: 500;">Info</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Action Box -->
+                <div class="card" style="margin-top: var(--space-md); border: 2px solid var(--primary);">
+                    <h3
+                        style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="shield-check" style="width: 20px;"></i> Central de Resposta
+                    </h3>
+                    <form th:action="@{/admin/tickets/respond/{id}(id=${ticket.id})}" method="post"
+                        enctype="multipart/form-data">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label class="form-label">Mensagem para o Morador</label>
+                            <textarea name="message" class="form-control" style="min-height: 150px;"
+                                placeholder="Explique os próximos passos ou a conclusão do atendimento..."
+                                required></textarea>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label class="form-label">Atualizar Status</label>
+                                <select name="status" class="form-control"
+                                    style="background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;">
+                                    <option value="">Manter atual</option>
+                                    <option th:each="st : ${statuses}" th:value="${st}" th:text="${st}"
+                                        th:selected="${st == ticket.status}">STATUS</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Notas Internas / Providências</label>
+                                <input type="text" name="additionalInfo" class="form-control"
+                                    placeholder="Ex: Contatado empresa de elevadores">
+                            </div>
+                        </div>
+
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                            <label
+                                style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+                                <i data-lucide="paperclip" style="width: 18px;"></i> Anexar Documentos
+                                <input type="file" name="imageFiles" multiple style="display: none;">
+                            </label>
+                            <button type="submit" class="btn btn-primary"
+                                style="padding-left: 2.5rem; padding-right: 2.5rem;">Enviar Tratativa</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Admin Tools -->
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+
+                <!-- Resident Details Card -->
+                <div class="card">
+                    <h4
+                        style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem;">
+                        Solicitante</h4>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div
+                            style="width: 44px; height: 44px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem;">
+                            <span th:text="${#strings.substring(ticket.author.fullName, 0, 1)}">M</span>
+                        </div>
+                        <div>
+                            <div style="font-weight: 800; color: var(--primary);" th:text="${ticket.author.fullName}">
+                                Nome do Morador</div>
+                            <div style="font-size: 0.8125rem; color: var(--text-muted);"
+                                th:text="'Unidade ' + ${ticket.author.unit}">Unid 101</div>
+                        </div>
+                    </div>
+                    <a th:href="@{/admin/residents(id=${ticket.author.id})}" class="btn"
+                        style="width: 100%; border: 1px solid var(--border); font-size: 0.75rem; padding: 0.5rem;">Ver
+                        Perfil Completo</a>
+                </div>
+
+                <!-- Thread Linking Card -->
+                <div class="card">
+                    <h4
+                        style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem;">
+                        Agrupar Chamado</h4>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">
+                        Vincule este item a um problema já existente no sistema.</p>
+                    <form th:action="@{/admin/tickets/link}" method="post">
+                        <input type="hidden" name="childId" th:value="${ticket.id}">
+                        <select name="parentId" class="form-control"
+                            style="font-size: 0.75rem; padding: 0.5rem; margin-bottom: 0.75rem;" required>
+                            <option value="">Selecionar Principal...</option>
+                            <option th:each="t : ${allTickets}" th:if="${t.id != ticket.id}" th:value="${t.id}"
+                                th:text="'#' + ${t.id} + ' - ' + ${t.title}">TICKET</option>
+                        </select>
+                        <button type="submit" class="btn"
+                            style="width: 100%; background: var(--surface-sunken); color: var(--primary); font-size: 0.75rem;">Vincular
+                            Agora</button>
+                    </form>
+                </div>
+
+                <!-- Linked Items List -->
+                <div th:if="${not #lists.isEmpty(ticket.linkedTickets)}" class="card"
+                    style="background: var(--surface-sunken); border: none;">
+                    <h4
+                        style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 1rem;">
+                        Chamados Associados</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a th:each="linked : ${ticket.linkedTickets}"
+                            th:href="@{/admin/tickets/view/{id}(id=${linked.id})}"
+                            style="display: block; text-decoration: none; padding: 0.75rem; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border-light); transition: all 0.2s;">
+                            <div style="font-weight: 700; color: var(--primary); font-size: 0.8125rem;"
+                                th:text="'#' + ${linked.id}">#ID</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                th:text="${linked.title}">Título</div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

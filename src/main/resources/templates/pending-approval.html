@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aguardando Aprovação | Kondor System</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="login-container">
+    <div class="login-card" style="text-align: center; max-width: 450px;">
+        <div
+            style="width: 80px; height: 80px; background: #FEF3C7; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #D97706; margin-bottom: 1.5rem;">
+            <i data-lucide="clock" style="width: 40px; height: 40px;"></i>
+        </div>
+
+        <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">Cadastro em
+            Análise</h1>
+
+        <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem;">
+            Olá, <strong th:text="${user.fullName}">Usuário</strong>! <br>
+            Seu cadastro foi recebido e está aguardando aprovação da administração do condomínio.
+        </p>
+
+        <div
+            style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.9rem; text-align: left;">
+            <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-main);">Próximos passos:</p>
+            <ul style="margin: 0; padding-left: 1.25rem; color: var(--text-muted);">
+                <li style="margin-bottom: 0.25rem;">Aguarde a validação dos seus dados.</li>
+                <li>Você receberá um e-mail assim que o acesso for liberado.</li>
+            </ul>
+        </div>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn"
+                style="background: white; border: 1px solid #E2E8F0; color: var(--text-main); width: 100%;">
+                Voltar para o Login
+            </button>
+        </form>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

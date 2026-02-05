@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Kondor System</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="auth-wrapper animate-fade-in">
+    <div class="auth-card">
+        <!-- Logo Section -->
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <div
+                style="width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: var(--shadow-soft);">
+                <i data-lucide="building" style="width: 28px; height: 28px;"></i>
+            </div>
+            <h1
+                style="font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -0.03em; margin-bottom: 0.25rem;">
+                Kondor System</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem; font-weight: 500;">Gestão Inteligente de
+                Condomínios</p>
+        </div>
+
+        <!-- System Alerts -->
+        <div th:if="${param.error}" class="animate-fade-in"
+            style="background: #fef2f2; border: 1px solid #fee2e2; color: #b91c1c; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 2rem; font-size: 0.8125rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="alert-circle" style="width: 18px; flex-shrink: 0;"></i>
+            <span>Usuário ou senha inválidos.</span>
+        </div>
+
+        <div th:if="${param.logout}" class="animate-fade-in"
+            style="background: #ecfdf5; border: 1px solid #d1fae5; color: #065f46; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 2rem; font-size: 0.8125rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="check-circle" style="width: 18px; flex-shrink: 0;"></i>
+            <span>Você saiu do sistema com sucesso.</span>
+        </div>
+
+        <!-- Login Form -->
+        <form th:action="@{/login}" method="post">
+            <div style="margin-bottom: 1.5rem;">
+                <label class="form-label">E-mail de Acesso</label>
+                <input type="text" name="username" class="form-control" placeholder="exemplo@email.com" required
+                    autofocus>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <label class="form-label" style="margin-bottom: 0;">Senha</label>
+                    <a href="#"
+                        style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-decoration: none;">Esqueceu
+                        a senha?</a>
+                </div>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; height: 48px; font-size: 0.9375rem; gap: 0.75rem;">
+                Entrar no Sistema
+                <i data-lucide="arrow-right" style="width: 18px;"></i>
+            </button>
+        </form>
+
+        <!-- Dynamic Separator -->
+        <div style="display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0;">
+            <div style="flex: 1; height: 1px; background: var(--border-light);"></div>
+            <span
+                style="font-size: 0.75rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">OU</span>
+            <div style="flex: 1; height: 1px; background: var(--border-light);"></div>
+        </div>
+
+        <!-- Register CTA -->
+        <div style="text-align: center;">
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Ainda não tem conta no
+                portal?</p>
+            <a th:href="@{/register}" class="btn"
+                style="width: 100%; background: var(--surface-sunken); color: var(--primary); border: 1px solid var(--border-light);">
+                Solicitar Acesso como Morador
+            </a>
+        </div>
+    </div>
+
+    <!-- Feedback Modals (Standardized) -->
+
+    <!-- Pending Approval -->
+    <div id="pendingModal" th:if="${param.pending}" class="auth-wrapper"
+        style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 1000;">
+        <div class="auth-card animate-fade-in" style="text-align: center; max-width: 400px;">
+            <div
+                style="width: 64px; height: 64px; background: #eff6ff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #2563eb; margin-bottom: 1.5rem;">
+                <i data-lucide="shield-alert" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.75rem;">Aguardando
+                Aprovação</h3>
+            <p style="color: var(--text-muted); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 2rem;">
+                Seu cadastro está em análise pela administração. Você será notificado por e-mail assim que o acesso for
+                liberado.
+            </p>
+            <button onclick="this.closest('#pendingModal').remove()" class="btn btn-primary"
+                style="width: 100%;">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Registration Success -->
+    <div id="registrationModal" th:if="${param.registered}" class="auth-wrapper"
+        style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 1000;">
+        <div class="auth-card animate-fade-in" style="text-align: center; max-width: 400px;">
+            <div
+                style="width: 64px; height: 64px; background: #ecfdf5; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #10b981; margin-bottom: 1.5rem;">
+                <i data-lucide="check-circle" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.75rem;">Solicitação
+                Enviada</h3>
+            <p style="color: var(--text-muted); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 2rem;">
+                Obrigado pelo seu interesse! Sua solicitação foi recebida e agora será analisada pela equipe do
+                condomínio.
+            </p>
+            <button onclick="this.closest('#registrationModal').remove()" class="btn btn-primary"
+                style="width: 100%;">Concluir</button>
+        </div>
+    </div>
+
+    <!-- Rejected -->
+    <div id="rejectedModal" th:if="${param.rejected}" class="auth-wrapper"
+        style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 1000;">
+        <div class="auth-card animate-fade-in" style="text-align: center; max-width: 400px;">
+            <div
+                style="width: 64px; height: 64px; background: #fef2f2; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #ef4444; margin-bottom: 1.5rem;">
+                <i data-lucide="x-circle" style="width: 32px; height: 32px;"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.75rem;">Acesso não
+                Autorizado</h3>
+            <p style="color: var(--text-muted); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 2rem;">
+                Detectamos que seu cadastro foi recusado ou desabilitado. Por favor, entre em contato com a
+                administração.
+            </p>
+            <button onclick="this.closest('#rejectedModal').remove()" class="btn btn-primary"
+                style="width: 100%;">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

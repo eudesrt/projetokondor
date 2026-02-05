@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title th:text="${contact.id == null ? 'Novo Contato' : 'Editar Contato'}">Contato</title>
+</head>
+
+<body>
+    <div layout:fragment="page-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a th:href="@{/admin/contacts}" class="btn btn-ghost btn-icon">
+                <i data-lucide="arrow-left"></i>
+            </a>
+            <div>
+                <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--primary);"
+                    th:text="${contact.id == null ? 'Novo Contato' : 'Editar Contato'}">Título</h1>
+            </div>
+        </div>
+    </div>
+
+    <div layout:fragment="content" class="animate-fade-in">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="card" style="padding: var(--space-lg); border: none; box-shadow: var(--shadow-soft);">
+                <form th:action="@{/admin/contacts}" th:object="${contact}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div style="margin-bottom: 2rem;">
+                        <label class="form-label" style="font-weight: 700; color: var(--primary);">Nome do Local /
+                            Pessoa</label>
+                        <input type="text" th:field="*{name}" class="form-control"
+                            placeholder="Ex: Portaria Principal, Zelador..." required />
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Identificação clara
+                            para o morador.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div>
+                            <label class="form-label" style="font-weight: 700; color: var(--primary);">Telefone /
+                                Ramal</label>
+                            <input type="text" th:field="*{phoneNumber}" class="form-control"
+                                placeholder="Ex: (11) 9999-9999 ou Ramal 10" required />
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-weight: 700; color: var(--primary);">Cargo /
+                                Função</label>
+                            <input type="text" th:field="*{role}" class="form-control"
+                                placeholder="Ex: Gerente Predial" />
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; align-items: end;">
+                        <div>
+                            <label class="form-label" style="font-weight: 700; color: var(--primary);">Ordem de
+                                Exibição</label>
+                            <input type="number" th:field="*{displayOrder}" class="form-control" />
+                            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Menores números
+                                aparecem primeiro.</p>
+                        </div>
+                        <div style="margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <label
+                                style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;">
+                                <input type="checkbox" th:field="*{emergency}"
+                                    style="width: 20px; height: 20px; accent-color: var(--error);">
+                                <span style="font-weight: 700; color: var(--error); font-size: 0.875rem;">Emergência
+                                    Estratégica</span>
+                            </label>
+                            <label
+                                style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;">
+                                <input type="checkbox" th:field="*{whatsapp}"
+                                    style="width: 20px; height: 20px; accent-color: #25D366;">
+                                <span style="font-weight: 700; color: #25D366; font-size: 0.875rem;">Atendimento via
+                                    WhatsApp</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 1rem; background: var(--surface-sunken); border-radius: var(--radius-md); margin-bottom: 2.5rem;">
+                        <label
+                            style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;">
+                            <input type="checkbox" th:field="*{active}"
+                                style="width: 20px; height: 20px; accent-color: var(--primary);">
+                            <div>
+                                <span
+                                    style="display: block; font-weight: 700; color: var(--primary); font-size: 0.875rem;">Contato
+                                    Ativo</span>
+                                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Disponível para
+                                    visualização no portal.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: flex-end; gap: 1rem; pt-4; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+                        <a th:href="@{/admin/contacts}" class="btn"
+                            style="color: var(--text-muted); font-weight: 700;">Cancelar</a>
+                        <button type="submit" class="btn btn-primary"
+                            style="padding: 0.75rem 2rem; border-radius: var(--radius-md);">
+                            <i data-lucide="save" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i>
+                            Salvar Contato
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

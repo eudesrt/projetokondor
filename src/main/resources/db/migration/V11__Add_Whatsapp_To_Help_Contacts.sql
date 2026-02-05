@@ -1,0 +1,1 @@
+ALTER TABLE help_contacts ADD COLUMN whatsapp BOOLEAN DEFAULT FALSE;

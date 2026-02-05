@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Editar Morador</title>
+</head>
+
+<body>
+    <div layout:fragment="page-header"
+        style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a th:href="@{/admin/residents}" class="btn"
+            style="padding: 0.5rem; background: var(--surface-sunken); color: var(--primary);">
+            <i data-lucide="arrow-left" style="width: 20px;"></i>
+        </a>
+        <div style="display: flex; flex-direction: column;">
+            <span
+                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Gestão
+                de Moradores</span>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 0;">Editar Perfil</h2>
+        </div>
+    </div>
+
+    <div layout:fragment="content" class="animate-fade-in">
+        <div class="card" style="max-width: 800px; margin: 0 auto; padding: var(--space-lg);">
+            <div
+                style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-light);">
+                <div
+                    style="width: 64px; height: 64px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem;">
+                    <span th:text="${#strings.substring(user.fullName, 0, 1)}">M</span>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 0;"
+                        th:text="${user.fullName}">Nome do Morador</h3>
+                    <p style="margin: 0; color: var(--text-muted); font-size: 0.875rem;" th:text="${user.email}">
+                        email@email.com</p>
+                </div>
+            </div>
+
+            <form th:action="@{/admin/residents/update/{id}(id=${user.id})}" method="post" th:object="${user}">
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" th:field="*{fullName}" class="form-control" required
+                        placeholder="Ex: João da Silva">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label class="form-label">E-mail de Contato</label>
+                        <input type="email" th:field="*{email}" class="form-control" required
+                            placeholder="joao@exemplo.com">
+                    </div>
+                    <div>
+                        <label class="form-label">Telefone / WhatsApp</label>
+                        <input type="text" th:field="*{phone}" class="form-control" required
+                            placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div>
+                        <label class="form-label">Unidade / Apartamento</label>
+                        <input type="text" th:field="*{unit}" class="form-control" required
+                            placeholder="Ex: Torre A, 101">
+                    </div>
+                    <div>
+                        <label class="form-label">Perfil de Acesso</label>
+                        <select name="roleName" class="form-control" required
+                            style="appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;">
+                            <option value="ROLE_PROPRIETARIO"
+                                th:selected="${user.roles.iterator().next().name == 'ROLE_PROPRIETARIO'}">Proprietário
+                            </option>
+                            <option value="ROLE_CONDOMINO"
+                                th:selected="${user.roles.iterator().next().name == 'ROLE_CONDOMINO'}">Condômino
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                    <a th:href="@{/admin/residents}" class="btn"
+                        style="background: var(--surface-sunken); color: var(--primary);">Cancelar</a>
+                    <button type="submit" class="btn btn-primary"
+                        style="padding-left: 2rem; padding-right: 2rem;">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
