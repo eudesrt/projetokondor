@@ -23,20 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                                 .orElseThrow(() -> new UsernameNotFoundException(
                                                 "Usuario nao encontrado: " + username));
 
-                System.out.println(">>> SENHA NO BANCO: [" + user.getPassword() + "]");
-                System.out.println(
-                                ">>> TAMANHO SENHA: " + (user.getPassword() != null ? user.getPassword().length() : 0));
-
-                String finalPassword = user.getPassword().trim();
-
-                // BYPASS TEMPORÁRIO: Aceita 'admin' como senha para o usuário admin
-                if ("admin".equals(user.getUsername().trim())) {
-                        finalPassword = "admin";
-                }
+                System.out.println("[DEBUG] User found: " + user.getUsername() + ", active: " + user.isActive() + ", password length: " + (user.getPassword() != null ? user.getPassword().length() : 0));
 
                 return new org.springframework.security.core.userdetails.User(
                                 user.getUsername().trim(),
-                                finalPassword,
+                                user.getPassword(),
                                 user.isActive(),
                                 true, true, true,
                                 user.getRoles().stream()

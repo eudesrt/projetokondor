@@ -30,10 +30,10 @@
     </header>
 
     <!-- Ticker of pre-registered condo news -->
-    <div th:replace="~{fragments/layout :: ticker(${tickerItems})}"></div>
+    <div th:if="${tickerItems != null and !tickerItems.isEmpty()}" th:replace="~{fragments/layout :: ticker(${tickerItems})}"></div>
 
     <!-- Urgent banner -->
-    <div th:replace="~{fragments/layout :: urgent(${urgent})}"></div>
+    <div th:if="${urgent != null}" th:replace="~{fragments/layout :: urgent(${urgent})}"></div>
 
     <!-- Quick tiles -->
     <div class="tiles">
