@@ -42,13 +42,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/img/**", "/webjars/**", "/uploads/**").permitAll()
-                .antMatchers("/login", "/register").permitAll()
+                .antMatchers("/css/**", "/js/**", "/img/**", "/assets/**", "/app/**", "/webjars/**", "/uploads/**").permitAll()
+                .antMatchers("/login", "/register", "/cadastro").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("SINDICA", "ZELADOR", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/", true)
                 .failureHandler(customAuthenticationFailureHandler)
                 .permitAll()
