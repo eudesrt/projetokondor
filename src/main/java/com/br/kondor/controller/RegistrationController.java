@@ -24,11 +24,11 @@ public class RegistrationController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
+        model.addAttribute("registerForm", new User());
+        return "cadastro";
     }
 
-    @PostMapping("/register")
+    @PostMapping({"/register", "/cadastro"})
     public String processRegistration(User user,
             @org.springframework.web.bind.annotation.RequestParam String roleName,
             Model model) {
@@ -55,7 +55,7 @@ public class RegistrationController {
 
             // Restore password field empty for security or keep logic as preferred
             // We need to ensure 'user' object is sent back to keep other fields filled
-            return "register";
+            return "cadastro";
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

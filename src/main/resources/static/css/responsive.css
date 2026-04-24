@@ -1,0 +1,118 @@
+/* =============================================================
+   Responsive — Modo Desktop (≥ 900px)
+   ============================================================= */
+
+@media (min-width: 900px) {
+  /* Container expansão */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .page {
+    padding-bottom: 0;
+  }
+
+  /* Hide tab bar on desktop */
+  .tabbar {
+    display: none;
+  }
+
+  /* Admin layout */
+  .admin {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .admin__sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid var(--line);
+    padding: 24px 16px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .admin__main {
+    margin-left: 240px;
+    flex: 1;
+    overflow: auto;
+  }
+
+  .admin__topbar {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .admin__content {
+    padding: 32px;
+  }
+
+  /* Grid layouts for desktop */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .news-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* Adjust padding/margins for desktop */
+  .hero {
+    padding: 40px 32px;
+  }
+
+  .section-head {
+    padding: 20px 32px;
+  }
+
+  .urgent {
+    margin: 0 32px 32px;
+  }
+
+  .qr-card {
+    margin: 0 32px 32px;
+  }
+}
+
+/* Extra large screens */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1400px;
+  }
+
+  .admin__sidebar {
+    width: 280px;
+  }
+
+  .admin__main {
+    margin-left: 280px;
+  }
+
+  .tiles {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .news-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stats {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

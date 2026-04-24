@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Vila Mascote — App do Condomínio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0b1e2d;
+    --ink-2: #3a4a59;
+    --ink-3: #6b7a87;
+    --line: #e6ebf0;
+    --line-2: #eef2f6;
+    --surface: #ffffff;
+    --bg: #f4f7fa;
+    --bg-2: #eef3f8;
+    --brand: #0a84c8;       /* Viva Benx-inspired deep blue */
+    --brand-600: #076fa8;
+    --brand-50: #e8f4fc;
+    --accent: #8dc63f;      /* green-lime accent */
+    --accent-600: #6ea82d;
+    --warn: #f59e0b;
+    --danger: #e45454;
+    --success: #22a06b;
+    --font-ui: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', 'Georgia', serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    background: #d9e2ec;
+    background-image: radial-gradient(circle at 20% 10%, #e8f0f7 0%, #c9d6e2 60%, #b9c8d6 100%);
+    min-height: 100vh;
+    font-family: var(--font-ui);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+  button { font-family: inherit; }
+  /* scrollbar hidden in phone viewport */
+  .phone-scroll::-webkit-scrollbar { width: 0; display:none }
+  .phone-scroll { scrollbar-width: none; }
+
+  /* pulse animation */
+  @keyframes softPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(228, 84, 84, 0.35); }
+    50% { box-shadow: 0 0 0 8px rgba(228, 84, 84, 0); }
+  }
+  .urgent-pulse { animation: softPulse 2.4s ease-in-out infinite; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 280ms ease-out both; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .slide-up { animation: slideUp 320ms cubic-bezier(.22,.7,.32,1) both; }
+
+  @keyframes sheenMove {
+    0% { transform: translateX(-100%) skewX(-20deg); }
+    100% { transform: translateX(200%) skewX(-20deg); }
+  }
+
+  /* ring shimmer for QR */
+  @keyframes qrRing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* news ticker */
+  @keyframes tickerScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    animation: tickerScroll 48s linear infinite;
+    will-change: transform;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+  @keyframes tickerDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .35; transform: scale(.85); }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="ios-frame.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="src/icons.jsx"></script>
+  <script type="text/babel" src="src/data.jsx"></script>
+  <script type="text/babel" src="src/ui.jsx"></script>
+  <script type="text/babel" src="src/screens-home.jsx"></script>
+  <script type="text/babel" src="src/screens-news.jsx"></script>
+  <script type="text/babel" src="src/screens-access.jsx"></script>
+  <script type="text/babel" src="src/screens-tickets.jsx"></script>
+  <script type="text/babel" src="src/screens-contacts.jsx"></script>
+  <script type="text/babel" src="src/screens-extras.jsx"></script>
+  <script type="text/babel" src="src/desktop.jsx"></script>
+  <script type="text/babel" src="src/app.jsx"></script>
+</body>
+</html>

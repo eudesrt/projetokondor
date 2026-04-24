@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Chamados')}"></head>
+<body>
+
+<div class="container page fade-in">
+
+    <!-- Header -->
+    <header style="padding: 58px 20px 14px; display:flex; align-items:flex-end; gap:12px;">
+        <div style="flex:1;">
+            <div class="section-head__eyebrow">Manutenção &amp; Reclamações</div>
+            <div style="font-size:26px; font-weight:800; line-height:1.1; color: var(--ink); letter-spacing:-.5px;">Chamados</div>
+        </div>
+        <a th:href="@{/chamados/novo}" class="btn btn--primary btn--icon-only" aria-label="Novo chamado">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </a>
+    </header>
+
+    <!-- Status cards -->
+    <div class="status-cards">
+        <a th:href="@{/chamados(filter='aberto')}" class="status-card"
+           th:classappend="${filter == 'aberto'} ? 'is-active'">
+            <div class="status-card__count" style="color: var(--warn-ink);" th:text="${counts.aberto}">0</div>
+            <div class="status-card__label">Abertos</div>
+        </a>
+        <a th:href="@{/chamados(filter='andamento')}" class="status-card"
+           th:classappend="${filter == 'andamento'} ? 'is-active'">
+            <div class="status-card__count" style="color: var(--brand);" th:text="${counts.andamento}">0</div>
+            <div class="status-card__label">Em andamento</div>
+        </a>
+        <a th:href="@{/chamados(filter='finalizado')}" class="status-card"
+           th:classappend="${filter == 'finalizado'} ? 'is-active'">
+            <div class="status-card__count" style="color: var(--accent-600);" th:text="${counts.finalizado}">0</div>
+            <div class="status-card__label">Finalizados</div>
+        </a>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="scroll-x" style="padding: 0 16px 12px; display:flex; gap:8px;">
+        <a th:each="f : ${filters}" th:href="@{/chamados(filter=${f.id})}" class="chip"
+           th:classappend="${f.id == filter} ? 'is-active'">
+            <span th:text="${f.label}">Todos</span>
+            <span style="opacity:.6; margin-left:4px;" th:text="${f.count}">0</span>
+        </a>
+    </div>
+
+    <!-- Tickets list -->
+    <div class="news-list">
+        <a th:each="t : ${tickets}" th:href="@{/chamados/{id}(id=${t.id})}" class="card card--interactive">
+            <div class="ticket-row">
+                <div class="ticket-row__head">
+                    <span class="ticket-row__code" th:text="${t.code}">#2487</span>
+                    <span class="badge"
+                          th:classappend="${t.status == 'aberto'} ? 'badge--amber' : (${t.status == 'andamento'} ? 'badge' : 'badge--green')"
+                          th:text="${t.statusLabel}">Status</span>
+                    <span th:if="${t.priority == 'alta'}" class="badge badge--red">alta</span>
+                </div>
+                <div class="ticket-row__title" th:text="${t.title}">Título do chamado</div>
+                <div class="ticket-row__meta">
+                    <span th:text="${t.category}">Categoria</span>
+                    <th:block th:if="${t.location != null}">
+                        <span>•</span><span th:text="${t.location}">Local</span>
+                    </th:block>
+                    <span>•</span><span th:text="|Aberto ${t.created}|">Aberto hoje</span>
+                </div>
+            </div>
+        </a>
+
+        <div th:if="${#lists.isEmpty(tickets)}" class="card" style="padding:40px; text-align:center;">
+            <div style="font-size:40px; margin-bottom:10px;">📋</div>
+            <div style="font-size:14px; font-weight:700;">Nenhum chamado</div>
+            <div style="font-size:12px; color: var(--ink-3); margin-top:4px;">Toque no + para abrir um novo</div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: tabbar('tickets')}"></div>
+</div>
+</body>
+</html>

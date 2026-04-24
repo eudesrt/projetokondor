@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Painel do síndico')}"></head>
+<body>
+
+<div class="admin">
+    <!-- Sidebar -->
+    <aside class="admin__sidebar">
+        <div class="admin__brand">
+            <svg th:replace="~{fragments/layout :: logo(32)}"></svg>
+            <div>
+                <div class="admin__brand-name">Viva Benx Mascote</div>
+                <div class="admin__brand-role">Painel do síndico</div>
+            </div>
+        </div>
+
+        <a th:href="@{/admin}" class="admin__nav-item is-active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10.5z"/></svg>
+            <span style="flex:1;">Dashboard</span>
+        </a>
+        <a th:href="@{/admin/chamados}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015.3 5.3l-9 9a2 2 0 11-2.8-2.8l9-9z"/><path d="M14 6l4 4"/></svg>
+            <span style="flex:1;">Chamados</span>
+            <span class="admin__nav-badge" th:text="${stats.openTickets}">8</span>
+        </a>
+        <a th:href="@{/admin/noticias}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+            <span style="flex:1;">Publicações</span>
+        </a>
+        <a th:href="@{/admin/acessos}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"/></svg>
+            <span style="flex:1;">Controle de acesso</span>
+        </a>
+        <a th:href="@{/admin/reservas}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            <span style="flex:1;">Reservas</span>
+        </a>
+        <a th:href="@{/admin/encomendas}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8L12 3 3 8v8l9 5 9-5V8z"/></svg>
+            <span style="flex:1;">Encomendas</span>
+            <span class="admin__nav-badge" th:text="${stats.packages}">12</span>
+        </a>
+        <a th:href="@{/admin/moradores}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+            <span style="flex:1;">Moradores</span>
+        </a>
+
+        <div style="flex:1;"></div>
+        <div class="admin__user">
+            <div class="avatar avatar--sm" style="background: var(--ink);" th:text="${admin.initials}">RA</div>
+            <div style="flex:1; min-width:0;">
+                <div style="font-size:12px; font-weight:700;" th:text="${admin.name}">Roberto Almeida</div>
+                <div style="font-size:10px; color:var(--ink-3);">Síndico</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin__main">
+        <div class="admin__topbar">
+            <div style="flex:1;">
+                <div class="admin__topbar-eyebrow">Painel do síndico</div>
+                <div class="admin__topbar-title">Visão geral — abril / 2026</div>
+            </div>
+            <div class="admin__search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                <span>Buscar morador, unidade...</span>
+            </div>
+            <a th:href="@{/admin/noticias/nova}" class="btn btn--primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                Nova publicação
+            </a>
+        </div>
+
+        <div class="admin__content">
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat stat--accent">
+                    <div class="stat__label">Moradores ativos</div>
+                    <div class="stat__value" th:text="${stats.residents}">284</div>
+                    <div class="stat__delta">+12 este mês</div>
+                </div>
+                <div class="stat stat--amber">
+                    <div class="stat__label">Chamados abertos</div>
+                    <div class="stat__value" th:text="${stats.openTickets}">8</div>
+                    <div class="stat__delta">3 aguardando resposta</div>
+                </div>
+                <div class="stat stat--red">
+                    <div class="stat__label">Encomendas</div>
+                    <div class="stat__value" th:text="${stats.packages}">12</div>
+                    <div class="stat__delta">7 há +48h</div>
+                </div>
+                <div class="stat stat--brand">
+                    <div class="stat__label">Reservas hoje</div>
+                    <div class="stat__value" th:text="${stats.reservations}">5</div>
+                    <div class="stat__delta">Churrasqueira lotada sábado</div>
+                </div>
+            </div>
+
+            <!-- Featured news -->
+            <section class="featured">
+                <div class="featured__head">
+                    <div>
+                        <div class="section-head__eyebrow">Portal de notícias</div>
+                        <div style="font-family: var(--font-serif); font-size: 24px; color: var(--ink); line-height: 1.1; margin-top: 2px;">Notícias em destaque</div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <a th:href="@{/admin/noticias}" class="btn btn--sm">Gerenciar</a>
+                        <a th:href="@{/admin/noticias/nova}" class="btn btn--sm btn--primary">+ Publicar notícia</a>
+                    </div>
+                </div>
+
+                <div class="featured__grid">
+                    <!-- Hero -->
+                    <a th:if="${featuredHero != null}"
+                       th:href="@{/admin/noticias/{id}(id=${featuredHero.id})}"
+                       class="featured__hero"
+                       th:style="|background-image: url('/${featuredHero.img}');|">
+                        <div class="featured__hero-gradient"></div>
+                        <div class="featured__hero-top">
+                            <span th:replace="~{fragments/layout :: badge(${featuredHero.cat}, ${featuredHero.tag})}"></span>
+                            <span class="badge" style="background:rgba(255,255,255,.9); color: var(--ink);">⭐ Destaque</span>
+                        </div>
+                        <div class="featured__hero-body">
+                            <div class="featured__hero-title" th:text="${featuredHero.title}">Título em destaque</div>
+                            <div class="featured__hero-excerpt u-truncate-2" th:text="${featuredHero.excerpt}">Resumo...</div>
+                            <div class="featured__hero-meta">
+                                <span th:text="${featuredHero.author ?: 'Administração'}">Autor</span>
+                                <span>•</span><span th:text="${featuredHero.date}">Data</span>
+                                <span>•</span><span th:text="${featuredHero.read}">Leitura</span>
+                                <span style="margin-left:auto;" th:text="|${featuredHero.views ?: 218} leituras|">218 leituras</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Secondary -->
+                    <a th:each="n : ${featuredSecondary}"
+                       th:href="@{/admin/noticias/{id}(id=${n.id})}"
+                       class="featured__sec">
+                        <div class="featured__sec-img" th:style="|background-image: url('/${n.img}');|">
+                            <div class="featured__sec-badge">
+                                <span th:replace="~{fragments/layout :: badge(${n.cat}, ${n.tag})}"></span>
+                            </div>
+                        </div>
+                        <div class="featured__sec-body">
+                            <div class="featured__sec-title" th:text="${n.title}">Título</div>
+                            <div class="featured__sec-excerpt" th:text="${n.excerpt}">Resumo</div>
+                            <div class="featured__sec-foot">
+                                <span th:text="${n.date}">Data</span>
+                                <span th:text="${n.read}">Leitura</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="featured__grid-sm" th:if="${not #lists.isEmpty(featuredSmall)}">
+                    <a th:each="n : ${featuredSmall}"
+                       th:href="@{/admin/noticias/{id}(id=${n.id})}"
+                       class="featured__sm">
+                        <div class="featured__sm-img" th:style="|background-image: url('/${n.img}');|"></div>
+                        <div style="flex:1; min-width:0;">
+                            <span th:replace="~{fragments/layout :: badge(${n.cat}, ${n.tag})}"></span>
+                            <div style="font-size:13px; font-weight:700; color:var(--ink); margin-top:5px; line-height:1.3;" class="u-truncate-2" th:text="${n.title}">Título</div>
+                            <div style="font-size:11px; color: var(--ink-3); margin-top:5px;">
+                                <span th:text="${n.date}">Data</span> • <span th:text="${n.read}">Leitura</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Two columns -->
+            <div class="admin__cols">
+                <div class="card" style="padding:0; overflow:hidden;">
+                    <div class="tickets-table__head">
+                        <div>
+                            <div style="font-size:15px; font-weight:800;">Chamados recentes</div>
+                            <div style="font-size:12px; color: var(--ink-3); margin-top:2px;">Priorizados por status e data</div>
+                        </div>
+                        <a th:href="@{/admin/chamados}" style="font-size:12px; color: var(--brand); font-weight:700;">Ver todos →</a>
+                    </div>
+                    <div>
+                        <a th:each="t : ${recentTickets}" th:href="@{/admin/chamados/{id}(id=${t.id})}" class="tickets-table__row" style="color:inherit;">
+                            <span class="tickets-table__code" th:text="${t.code}">#2487</span>
+                            <div>
+                                <div style="font-size:13px; font-weight:700;" th:text="${t.title}">Título</div>
+                                <div style="font-size:11px; color: var(--ink-3); margin-top:2px;" th:text="|${t.unit} • ${t.category}|">Apto • Categoria</div>
+                            </div>
+                            <span style="font-size:12px; color: var(--ink-3);" th:text="${t.created}">Data</span>
+                            <span class="badge"
+                                  th:classappend="${t.status == 'aberto'} ? 'badge--amber' : (${t.status == 'andamento'} ? '' : 'badge--green')"
+                                  th:text="${t.status}">Status</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="urgent-admin">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background: var(--danger); color:#fff; display:grid; place-items:center;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v4M12 18v.01"/></svg>
+                            </div>
+                            <div style="font-size:11px; font-weight:800; color: var(--danger-ink); text-transform:uppercase; letter-spacing:.5px;">Comunicado urgente ativo</div>
+                        </div>
+                        <div style="font-size:15px; font-weight:700; margin-top:10px;" th:text="${urgent.title}">Título</div>
+                        <div style="font-size:12px; color: var(--ink-2); margin-top:6px; line-height:1.5;"
+                             th:text="|Visualizado por ${urgent.readCount} de ${urgent.totalResidents} moradores (${urgent.percent}%)|">218 de 284 (77%)</div>
+                        <div class="urgent-admin__bar">
+                            <div class="urgent-admin__fill" th:style="|width: ${urgent.percent}%|"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding:20px;">
+                        <div style="font-size:15px; font-weight:800; margin-bottom:14px;">Atividade agora</div>
+                        <div th:each="a : ${activity}" class="activity__item">
+                            <span class="activity__dot" th:style="|background: ${a.color}|"></span>
+                            <div style="flex:1;">
+                                <div style="font-size:12px; color: var(--ink-3);" th:text="${a.time}">14:32</div>
+                                <div style="font-size:13px; color: var(--ink);" th:text="${a.text}">Evento</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

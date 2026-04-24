@@ -32,6 +32,6 @@ public class NewsController {
         // Also inject help contacts for the sidebar if we reuse components
         // model.addAttribute("helpContacts", helpContactService.findAllActive());
 
-        return "news/list";
+        return "noticias/lista";
     }
 }

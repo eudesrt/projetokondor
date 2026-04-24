@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Novo chamado')}"></head>
+<body>
+
+<div class="container page fade-in">
+
+    <header style="padding: 58px 20px 14px; display:flex; align-items:center; gap:12px;">
+        <a th:href="@{/chamados}" class="btn btn--icon-only" aria-label="Voltar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+        <div>
+            <div class="section-head__eyebrow">Novo chamado</div>
+            <div style="font-size:22px; font-weight:800; letter-spacing:-.5px;">Conte o que aconteceu</div>
+        </div>
+    </header>
+
+    <form th:action="@{/chamados}" method="post" th:object="${ticketForm}"
+          style="padding: 8px 20px 40px;" enctype="multipart/form-data">
+
+        <!-- Category -->
+        <div style="margin-bottom: 16px;">
+            <div class="field__label">Categoria</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <label th:each="c : ${categoriesForm}" style="cursor:pointer;">
+                    <input type="radio" th:field="*{category}" th:value="${c.id}" style="display:none;" class="peer">
+                    <div class="status-card" style="display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+                        <div class="tile__icon" th:style="|background: ${c.bg}; color: ${c.color};|" th:utext="${c.icon}"></div>
+                        <div style="font-size:13px; font-weight:700;" th:text="${c.id}">Categoria</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <label class="field">
+            <span class="field__label">Título resumido</span>
+            <input class="input" type="text" th:field="*{title}" placeholder="Ex. Torneira vazando na cozinha" required>
+        </label>
+
+        <label class="field">
+            <span class="field__label">Local específico</span>
+            <input class="input" type="text" th:field="*{location}" placeholder="Ex. Garagem G2, vaga 42 • Hall do 12º andar">
+        </label>
+
+        <label class="field">
+            <span class="field__label">Descreva o problema</span>
+            <textarea class="textarea" rows="4" th:field="*{description}" placeholder="Dê detalhes que possam ajudar a equipe a resolver..." required></textarea>
+        </label>
+
+        <div style="margin-bottom: 16px;">
+            <div class="field__label">Prioridade</div>
+            <div style="display:flex; gap:8px;">
+                <label style="flex:1;">
+                    <input type="radio" th:field="*{priority}" value="baixa" style="display:none;">
+                    <div class="chip" style="width:100%; justify-content:center;">Baixa</div>
+                </label>
+                <label style="flex:1;">
+                    <input type="radio" th:field="*{priority}" value="normal" style="display:none;">
+                    <div class="chip" style="width:100%; justify-content:center;">Normal</div>
+                </label>
+                <label style="flex:1;">
+                    <input type="radio" th:field="*{priority}" value="alta" style="display:none;">
+                    <div class="chip" style="width:100%; justify-content:center;">Alta</div>
+                </label>
+            </div>
+        </div>
+
+        <label class="field">
+            <span class="field__label">Fotos (opcional — até 3)</span>
+            <input type="file" name="photos" accept="image/*" multiple
+                   style="padding:14px; border:1.5px dashed var(--line); border-radius:14px; background:#fafcfd; width:100%;">
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--block" style="margin-top:16px;">
+            Abrir chamado
+        </button>
+    </form>
+
+    <div th:replace="~{fragments/layout :: tabbar('tickets')}"></div>
+</div>
+</body>
+</html>

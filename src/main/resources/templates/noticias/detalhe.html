@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${item.title})}"></head>
+<body>
+
+<div class="container page fade-in">
+
+    <article>
+        <div class="detail-hero">
+            <img class="detail-hero__img" th:src="@{/{src}(src=${item.img})}" th:alt="${item.title}">
+            <div class="detail-hero__gradient"></div>
+            <a th:href="@{/noticias}" class="detail-hero__back" aria-label="Voltar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </a>
+            <div class="detail-hero__badge">
+                <span th:replace="~{fragments/layout :: badge(${item.cat}, ${item.tag})}"></span>
+            </div>
+        </div>
+
+        <div class="detail-body">
+            <h1 class="detail-body__title" th:text="${item.title}">Título da notícia</h1>
+
+            <div class="detail-body__byline">
+                <div class="avatar avatar--sm" th:text="${item.authorInitials ?: 'AD'}">AD</div>
+                <div style="flex:1;">
+                    <div class="detail-body__author" th:text="${item.author ?: 'Administração'}">Administração</div>
+                    <div class="detail-body__meta"><span th:text="${item.date}">Data</span> • <span th:text="${item.read}">3 min</span> de leitura</div>
+                </div>
+                <form th:action="@{/noticias/{id}/curtir(id=${item.id})}" method="post">
+                    <button class="btn btn--sm" type="submit">♡ Curtir</button>
+                </form>
+            </div>
+
+            <p th:each="p : ${item.body}" class="detail-body__p" th:text="${p}">Parágrafo do corpo da notícia...</p>
+        </div>
+    </article>
+
+    <div th:replace="~{fragments/layout :: tabbar('news')}"></div>
+</div>
+</body>
+</html>

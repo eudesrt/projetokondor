@@ -87,17 +87,21 @@ public class HomeController {
 
             // Contacts
             java.util.List<java.util.Map<String, Object>> contacts = new java.util.ArrayList<>();
+            String[] palette = {"#0a84c8", "#8dc63f", "#f59e0b", "#e45454", "#22a06b", "#7c3aed"};
             try {
+                int idx = 0;
                 for (com.br.kondor.model.HelpContact c : helpContactService.findAllActive()) {
                     java.util.Map<String, Object> m = new java.util.HashMap<>();
                     m.put("id", c.getId());
                     m.put("name", c.getName());
                     m.put("role", c.getRole() != null ? c.getRole() : "Contato");
-                    m.put("phone", c.getPhoneNumber());
+                    m.put("phone", c.getPhoneNumber() != null ? c.getPhoneNumber() : "");
                     m.put("whats", c.isWhatsapp());
-                    m.put("avatar", c.getName().substring(0, 1).toUpperCase());
-                    m.put("color", "#0a84c8");
+                    m.put("avatar", c.getName() != null && !c.getName().isEmpty()
+                            ? c.getName().substring(0, 1).toUpperCase() : "?");
+                    m.put("color", palette[idx % palette.length]);
                     contacts.add(m);
+                    idx++;
                 }
             } catch (Exception e) {
                 System.out.println(">>> Error loading contacts: " + e.getMessage());
@@ -136,7 +140,7 @@ public class HomeController {
                 .limit(6)
                 .collect(java.util.stream.Collectors.toList()));
 
-        return "news-detail";
+        return "noticias/detalhe";
     }
 
     @org.springframework.web.bind.annotation.PostMapping("/news/{id}/comment")

@@ -1,0 +1,75 @@
+/* =============================================================
+   VIVA BENX MASCOTE — Design tokens
+   Use as the base import for every page. Variables only.
+   ============================================================= */
+:root {
+  /* Colors */
+  --ink: #0b1e2d;
+  --ink-2: #3a4a59;
+  --ink-3: #6b7a87;
+  --line: #e6ebf0;
+  --line-2: #eef2f6;
+  --surface: #ffffff;
+  --bg: #f4f7fa;
+  --bg-2: #eef3f8;
+
+  --brand: #0a84c8;
+  --brand-600: #076fa8;
+  --brand-50: #e8f4fc;
+  --accent: #8dc63f;
+  --accent-600: #6ea82d;
+
+  --warn: #f59e0b;
+  --warn-bg: #fff4e0;
+  --warn-ink: #b8770e;
+  --danger: #e45454;
+  --danger-bg: #fde7e7;
+  --danger-ink: #b53a3a;
+  --success: #22a06b;
+
+  /* Typography */
+  --font-ui: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', 'Georgia', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radii & shadow */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+  --shadow-card: 0 1px 2px rgba(10,30,45,0.03), 0 8px 24px -12px rgba(10,30,45,0.08);
+  --shadow-raise: 0 14px 30px -12px rgba(10,30,45,.15);
+  --shadow-brand: 0 8px 20px -6px rgba(10,132,200,.45);
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+body { min-height: 100vh; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* Animations */
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(228,84,84,.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(228,84,84,0); }
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+@keyframes tickerScroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+@keyframes tickerDot { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.35; transform:scale(.85);} }
+
+.urgent-pulse { animation: softPulse 2.4s ease-in-out infinite; }
+.fade-in { animation: fadeIn 280ms ease-out both; }
+
+/* Scrollbars (hide on phone rails) */
+.scroll-x { overflow-x: auto; }
+.scroll-x::-webkit-scrollbar { height: 0; display:none; }
+.scroll-x { scrollbar-width: none; }

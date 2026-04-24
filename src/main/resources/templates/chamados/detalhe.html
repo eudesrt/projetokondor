@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${ticket.title})}"></head>
+<body>
+
+<div class="container page fade-in">
+
+    <header style="padding: 58px 20px 14px; display:flex; align-items:flex-end; gap:12px;">
+        <a th:href="@{/chamados}" class="btn btn--icon-only" aria-label="Voltar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+        <div style="flex:1; min-width:0;">
+            <div class="section-head__eyebrow" th:text="|${ticket.code} • ${ticket.category}|">#2487 • Manutenção</div>
+            <div style="font-size:22px; font-weight:800; line-height:1.15; letter-spacing:-.5px;" th:text="${ticket.title}">Título</div>
+        </div>
+    </header>
+
+    <!-- Status stepper -->
+    <div style="padding:0 20px 20px;">
+        <div class="card" style="padding: 20px 16px;">
+            <div class="u-flex" style="align-items:center; gap:6px;">
+                <div style="flex:1; text-align:center;">
+                    <div style="width:28px; height:28px; border-radius:999px; background: var(--brand); color:#fff; margin:0 auto 6px; display:grid; place-items:center; font-size:13px; font-weight:700;">✓</div>
+                    <div style="font-size:10px; font-weight:700;">Aberto</div>
+                </div>
+                <div style="flex:.3; height:2px; background: var(--brand); margin-top:-20px;"
+                     th:classappend="${ticket.statusIdx >= 1} ? '' : 'bg-line'"
+                     th:style="|background: ${ticket.statusIdx >= 1 ? 'var(--brand)' : 'var(--line)'}|"></div>
+                <div style="flex:1; text-align:center;">
+                    <div th:style="|width:28px; height:28px; border-radius:999px; margin:0 auto 6px; display:grid; place-items:center; font-size:13px; font-weight:700; background: ${ticket.statusIdx >= 1 ? 'var(--brand)' : '#fff'}; color: ${ticket.statusIdx >= 1 ? '#fff' : 'var(--ink-3)'}; border: 2px solid ${ticket.statusIdx >= 1 ? 'var(--brand)' : 'var(--line)'};|">
+                        <span th:text="${ticket.statusIdx >= 1 ? '✓' : '2'}">2</span>
+                    </div>
+                    <div style="font-size:10px; font-weight:700;">Em andamento</div>
+                </div>
+                <div style="flex:.3; height:2px; margin-top:-20px;"
+                     th:style="|background: ${ticket.statusIdx >= 2 ? 'var(--brand)' : 'var(--line)'}|"></div>
+                <div style="flex:1; text-align:center;">
+                    <div th:style="|width:28px; height:28px; border-radius:999px; margin:0 auto 6px; display:grid; place-items:center; font-size:13px; font-weight:700; background: ${ticket.statusIdx >= 2 ? 'var(--brand)' : '#fff'}; color: ${ticket.statusIdx >= 2 ? '#fff' : 'var(--ink-3)'}; border: 2px solid ${ticket.statusIdx >= 2 ? 'var(--brand)' : 'var(--line)'};|">
+                        <span th:text="${ticket.statusIdx >= 2 ? '✓' : '3'}">3</span>
+                    </div>
+                    <div style="font-size:10px; font-weight:700;">Finalizado</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <div style="padding: 0 20px 12px;">
+        <div class="section-head__eyebrow" style="margin-bottom:12px;">Histórico</div>
+    </div>
+    <div class="timeline">
+        <div th:each="m : ${ticket.timeline}" class="timeline__item">
+            <div class="timeline__dot"
+                 th:classappend="${m.who == 'Você'} ? 'timeline__dot--you' : (${m.who == 'Síndico'} ? 'timeline__dot--sindico' : (${m.who == 'Zelador'} ? 'timeline__dot--zelador' : ''))"></div>
+            <div class="timeline__head">
+                <div class="timeline__who" th:text="${m.who}">Autor</div>
+                <div class="timeline__time" th:text="${m.t}">Quando</div>
+            </div>
+            <div class="timeline__text" th:text="${m.text}">Mensagem...</div>
+        </div>
+    </div>
+
+    <!-- Reply form -->
+    <form th:action="@{/chamados/{id}/mensagem(id=${ticket.id})}" method="post" style="padding: 12px 20px;">
+        <label class="field">
+            <span class="field__label">Adicionar comentário</span>
+            <textarea class="textarea" rows="3" name="text" placeholder="Digite aqui..."></textarea>
+        </label>
+        <div style="display:flex; gap:10px;">
+            <button type="submit" formaction="@{/chamados/{id}/finalizar(id=${ticket.id})}"
+                    class="btn" style="color: var(--success); border-color: var(--success);">Finalizar</button>
+            <button type="submit" class="btn btn--primary btn--block">Enviar</button>
+        </div>
+    </form>
+
+    <div th:replace="~{fragments/layout :: tabbar('tickets')}"></div>
+</div>
+</body>
+</html>

@@ -1,121 +1,91 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout}">
-
-<head>
-    <title>Gerenciar Notícias</title>
-</head>
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Notícias')}"></head>
 <body>
-    <div layout:fragment="page-header">
-        <div style="display: flex; flex-direction: column;">
-            <span
-                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Gestão
-                de Notícias</span>
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 0;">Painel de Publicações
-            </h2>
-        </div>
-    </div>
 
-    <div layout:fragment="page-actions">
-        <a th:href="@{/admin/news/new}" class="btn btn-primary"
-            style="padding: 0.625rem 1.25rem; gap: 0.5rem; box-shadow: var(--shadow-soft);">
-            <i data-lucide="plus" style="width: 18px;"></i> Nova Publicação
+<div class="admin">
+    <!-- Sidebar -->
+    <aside class="admin__sidebar">
+        <div class="admin__brand">
+            <svg th:replace="~{fragments/layout :: logo(32)}"></svg>
+            <div>
+                <div class="admin__brand-name">Viva Benx Mascote</div>
+                <div class="admin__brand-role">Painel do síndico</div>
+            </div>
+        </div>
+
+        <a th:href="@{/admin}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10.5z"/></svg>
+            <span style="flex:1;">Dashboard</span>
         </a>
-    </div>
+        <a th:href="@{/admin/chamados}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015.3 5.3l-9 9a2 2 0 11-2.8-2.8l9-9z"/><path d="M14 6l4 4"/></svg>
+            <span style="flex:1;">Chamados</span>
+        </a>
+        <a th:href="@{/admin/noticias}" class="admin__nav-item is-active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+            <span style="flex:1;">Publicações</span>
+        </a>
+        <a th:href="@{/admin/moradores}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>
+            <span style="flex:1;">Moradores</span>
+        </a>
+        <a th:href="@{/admin/contatos}" class="admin__nav-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <span style="flex:1;">Contatos</span>
+        </a>
+    </aside>
 
-    <div layout:fragment="content" class="animate-fade-in">
-        <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-light);">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead style="background: var(--surface-sunken); border-bottom: 2px solid var(--border-light);">
-                    <tr>
-                        <th
-                            style="padding: 1.25rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                            Notícia</th>
-                        <th
-                            style="padding: 1.25rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                            Data de Publicação</th>
-                        <th
-                            style="padding: 1.25rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                            Destaque</th>
-                        <th
-                            style="padding: 1.25rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                            Status</th>
-                        <th
-                            style="padding: 1.25rem 1.5rem; text-align: right; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                            Controle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="news : ${newsList}"
-                        style="border-bottom: 1px solid var(--border-light); transition: background 0.2s;"
-                        onmouseover="this.style.background='var(--surface-sunken)'"
-                        onmouseout="this.style.background='transparent'">
-                        <td style="padding: 1.25rem 1.5rem;">
-                            <div style="font-weight: 700; color: var(--primary); font-size: 0.9375rem;"
-                                th:text="${news.title}">Título</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
-                                <i data-lucide="calendar"
-                                    style="width: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
-                                <span
-                                    th:text="${news.expirationDate != null ? 'Expira em ' + #temporals.format(news.expirationDate, 'dd/MM/yyyy') : 'Sem expiração'}">Expiração</span>
-                            </div>
-                        </td>
-                        <td style="padding: 1.25rem 1.5rem;">
-                            <span style="font-size: 0.875rem; font-weight: 600; color: var(--primary-light);"
-                                th:text="${#temporals.format(news.publishDate, 'dd MMM, yyyy HH:mm')}">Data</span>
-                        </td>
-                        <td style="padding: 1.25rem 1.5rem;">
-                            <div th:if="${news.highlighted}"
-                                style="color: var(--accent); display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.75rem;">
-                                <i data-lucide="star" style="width: 16px; fill: currentColor;"></i>
-                                DESTAQUE
-                            </div>
-                            <span th:unless="${news.highlighted}"
-                                style="color: var(--text-light); opacity: 0.5;">-</span>
-                        </td>
-                        <td style="padding: 1.25rem 1.5rem;">
-                            <span th:if="${news.active}"
-                                style="background: #ecfdf5; color: #059669; padding: 0.35rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <span
-                                    style="width: 6px; height: 6px; background: currentColor; border-radius: 50%;"></span>
-                                Ativa
-                            </span>
-                            <span th:if="${!news.active}"
-                                style="background: #f1f5f9; color: #64748b; padding: 0.35rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <span
-                                    style="width: 6px; height: 6px; background: currentColor; border-radius: 50%;"></span>
-                                Rascunho
-                            </span>
-                        </td>
-                        <td style="padding: 1.25rem 1.5rem; text-align: right;">
-                            <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                                <a th:href="@{'/admin/news/edit/' + ${news.id}}" class="btn"
-                                    style="padding: 0.5rem; background: var(--surface-sunken); color: var(--primary); border-radius: var(--radius-md);">
-                                    <i data-lucide="edit-3" style="width: 18px;"></i>
-                                </a>
-                                <a th:href="@{'/admin/news/delete/' + ${news.id}}" class="btn"
-                                    style="padding: 0.5rem; background: rgba(220, 38, 38, 0.05); color: #dc2626; border-radius: var(--radius-md);"
-                                    onclick="return confirm('Esta ação não pode ser desfeita. Deseja excluir esta notícia?')">
-                                    <i data-lucide="trash-2" style="width: 18px;"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(newsList)}">
-                        <td colspan="4" style="padding: 4rem; text-align: center;">
-                            <div style="color: var(--text-light); margin-bottom: 1rem;">
-                                <i data-lucide="newspaper" style="width: 48px; height: 48px; opacity: 0.2;"></i>
-                            </div>
-                            <p style="font-weight: 600; color: var(--text-muted);">Nenhuma notícia publicada ainda.</p>
-                            <a th:href="@{/admin/news/new}" class="btn btn-primary" style="margin-top: 1rem;">Criar
-                                Primeira Notícia</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Main -->
+    <main class="admin__main">
+        <div class="admin__topbar">
+            <div style="flex:1;">
+                <div class="admin__topbar-eyebrow">Gerenciamento</div>
+                <div class="admin__topbar-title">Publicações</div>
+            </div>
+            <a th:href="@{/admin/noticias/nova}" class="btn btn--primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                Nova publicação
+            </a>
         </div>
-    </div>
-</body>
 
+        <div class="admin__content">
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Notícia</th>
+                            <th>Data</th>
+                            <th>Destaque</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="news : ${newsList}">
+                            <td>
+                                <div style="font-weight: 700;" th:text="${news.title}">Título</div>
+                                <div style="font-size: 12px; color: var(--ink-3); margin-top: 4px;" th:text="${news.expirationDate != null ? 'Expira: ' + news.expirationDate : 'Sem expiração'}">Data</div>
+                            </td>
+                            <td th:text="${#temporals.format(news.publishDate, 'dd MMM yyyy')}">Data</td>
+                            <td>
+                                <span th:if="${news.highlighted}" class="badge badge--green">DESTAQUE</span>
+                                <span th:unless="${news.highlighted}" style="opacity: 0.5;">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${news.active}" class="badge">ATIVO</span>
+                                <span th:unless="${news.active}" class="badge badge--gray">INATIVO</span>
+                            </td>
+                            <td style="text-align: right;">
+                                <a th:href="@{/admin/noticias/{id}(id=${news.id})}" class="btn btn--sm" style="background: var(--brand-50); color: var(--brand);">Editar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
 </html>

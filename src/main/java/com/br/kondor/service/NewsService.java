@@ -39,18 +39,11 @@ public class NewsService {
     public News saveNews(News incomingNews, MultipartFile[] files) throws IOException {
         System.out.println(
                 "DEBUG SERVICE SAVE: ID=" + incomingNews.getId() + ", IncomingActive=" + incomingNews.isActive());
-        boolean shouldHighlight = incomingNews.isHighlighted();
 
         News news;
         if (incomingNews.getId() == null) {
             // Create new
             news = incomingNews;
-            if (news.getImages() == null) {
-                news.setImages(new ArrayList<>());
-            }
-            if (news.getComments() == null) {
-                news.setComments(new ArrayList<>());
-            }
         } else {
             // Update existing
             news = getNewsById(incomingNews.getId());
@@ -59,41 +52,45 @@ public class NewsService {
             news.setPublishDate(incomingNews.getPublishDate());
             news.setExpirationDate(incomingNews.getExpirationDate());
             news.setActive(incomingNews.isActive());
-            // Don't set highlighted yet
+        }
 
-            // Add new images without replacing the collection
-            if (files != null && files.length > 0) {
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
+        // Initialize collections if null
+        if (news.getImages() == null) {
+            news.setImages(new ArrayList<>());
+        }
+        if (news.getComments() == null) {
+            news.setComments(new ArrayList<>());
+        }
 
-                for (MultipartFile file : files) {
-                    if (!file.isEmpty()) {
-                        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                        Path filePath = uploadPath.resolve(fileName);
-                        Files.copy(file.getInputStream(), filePath);
+        // Sanitize input
+        news.setTitle(sanitize(news.getTitle()));
+        news.setContent(sanitize(news.getContent()));
 
-                        NewsImage newsImage = new NewsImage();
-                        newsImage.setImageUrl("/news/" + fileName);
-                        newsImage.setNews(news);
-                        news.getImages().add(newsImage);
-                    }
+        // Process new images (Common for both CREATE and UPDATE)
+        if (files != null && files.length > 0) {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                    Path filePath = uploadPath.resolve(fileName);
+                    Files.copy(file.getInputStream(), filePath);
+
+                    NewsImage newsImage = new NewsImage();
+                    newsImage.setImageUrl("/news/" + fileName);
+                    newsImage.setNews(news);
+                    news.getImages().add(newsImage);
+                    System.out.println("Image saved: " + newsImage.getImageUrl());
                 }
             }
         }
 
-        // Sanitize input
-        if (incomingNews.getId() == null) {
-            news.setTitle(sanitize(news.getTitle()));
-            news.setContent(sanitize(news.getContent()));
-        }
-
-        // Handle highlighting logic carefully
-        if (shouldHighlight) {
-            // 1. Clear everyone else first (database update)
+        // Handle highlighting logic
+        if (incomingNews.isHighlighted()) {
             newsRepository.clearAllHighlights();
-            // 2. Now set this one to true (managed entity update)
             news.setHighlighted(true);
         } else {
             news.setHighlighted(false);

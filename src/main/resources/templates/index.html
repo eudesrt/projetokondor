@@ -3,116 +3,219 @@
 <head th:replace="~{fragments/layout :: head('Início')}"></head>
 <body>
 
-<div class="container page fade-in">
+<div class="container container--wide home">
 
-    <!-- Hero -->
-    <header class="hero">
-        <div class="hero__top">
-            <div class="hero__brand">
-                <svg th:replace="~{fragments/layout :: logo(38)}"></svg>
-                <div>
-                    <div class="hero__brand-eyebrow">Condomínio</div>
-                    <div class="hero__brand-name">Viva Benx Mascote</div>
-                </div>
+    <!-- ============ HEADER ============ -->
+    <header class="home__header">
+        <div class="home__brand">
+            <svg th:replace="~{fragments/layout :: logo(42)}"></svg>
+            <div>
+                <div class="home__eyebrow">Condomínio</div>
+                <div class="home__brandname">Viva Benx Mascote</div>
             </div>
-            <a th:href="@{/notificacoes}" class="bell" aria-label="Notificações">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16l-2-2z"/><path d="M10 20a2 2 0 004 0"/></svg>
-                <span class="bell__dot"></span>
-            </a>
         </div>
-        <div class="hero__greeting">
-            <div class="avatar avatar--lg" th:text="${user.initials}">MO</div>
-            <div style="flex:1; min-width:0;">
-                <div class="hero__hello">Olá, <em th:text="${user.name}">Marina</em></div>
-                <div class="hero__unit" th:text="${user.unit}">Torre 1 • Apto 1208</div>
-            </div>
+
+        <div class="home__header-actions">
+            <a th:href="@{/notificacoes}" class="icon-btn" aria-label="Notificações">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16v-5a6 6 0 10-12 0v5l-2 2h16l-2-2z"/><path d="M10 20a2 2 0 004 0"/></svg>
+                <span class="icon-btn__dot"></span>
+            </a>
+            <a th:href="@{/perfil}" class="home__avatar">
+                <span th:text="${user.initials}">MO</span>
+            </a>
         </div>
     </header>
 
-    <!-- Ticker of pre-registered condo news -->
-    <div th:if="${tickerItems != null and !tickerItems.isEmpty()}" th:replace="~{fragments/layout :: ticker(${tickerItems})}"></div>
-
-    <!-- Urgent banner -->
-    <div th:if="${urgent != null}" th:replace="~{fragments/layout :: urgent(${urgent})}"></div>
-
-    <!-- Quick tiles -->
-    <div class="tiles">
-        <a th:href="@{/chamados}" class="tile tone-amber">
-            <div class="tile__head">
-                <div class="tile__icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015.3 5.3l-9 9a2 2 0 11-2.8-2.8l9-9z"/><path d="M14 6l4 4"/></svg>
-                </div>
-                <span class="tile__count">2</span>
-            </div>
-            <div class="tile__label">Abrir chamado</div>
-        </a>
-        <a th:href="@{/areas}" class="tile tone-accent">
-            <div class="tile__head">
-                <div class="tile__icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
-                </div>
-            </div>
-            <div class="tile__label">Reservar área</div>
-        </a>
-        <a th:href="@{/encomendas}" class="tile tone-brand">
-            <div class="tile__head">
-                <div class="tile__icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8L12 3 3 8v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>
-                </div>
-                <span class="tile__count">2</span>
-            </div>
-            <div class="tile__label">Encomendas</div>
-        </a>
-        <a th:href="@{/votacoes}" class="tile tone-gray">
-            <div class="tile__head">
-                <div class="tile__icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-                </div>
-                <span class="tile__count">1</span>
-            </div>
-            <div class="tile__label">Votações</div>
-        </a>
-    </div>
-
-    <!-- News preview -->
-    <div class="section-head">
+    <!-- ============ GREETING ============ -->
+    <section class="home__greeting">
         <div>
-            <div class="section-head__eyebrow">Portal de notícias</div>
-            <div class="section-head__title">Últimas do condomínio</div>
+            <div class="home__hello">Olá, <em th:text="${user.name}">Morador</em></div>
+            <div class="home__unit" th:text="${user.unit}">Unidade</div>
         </div>
-        <a th:href="@{/noticias}" class="section-head__link">Ver tudo</a>
-    </div>
+        <div class="home__date">
+            <span th:text="${#dates.format(#dates.createNow(), 'EEEE, dd MMM')}">Hoje</span>
+        </div>
+    </section>
 
-    <div class="news-list">
-        <a th:each="n : ${newsPreview}" th:href="@{/noticias/{id}(id=${n.id})}" class="card card--interactive">
-            <div class="news-row">
-                <div style="flex:1; min-width:0; padding-right:6px;">
-                    <span th:if="${n.highlighted}" class="badge badge--green" style="margin-bottom:4px;">DESTAQUE</span>
-                    <div class="news-row__title" th:text="${n.title}">Título da notícia</div>
-                    <div class="news-row__meta" th:text="${#temporals.format(n.publishDate, 'dd MMM yyyy')}">Data</div>
+    <!-- ============ URGENT BANNER (conditional) ============ -->
+    <th:block th:if="${urgent != null}">
+        <div class="home__urgent-wrap">
+            <div th:replace="~{fragments/layout :: urgent(${urgent})}"></div>
+        </div>
+    </th:block>
+
+    <!-- ============ QUICK ACTIONS ============ -->
+    <section class="home__quick">
+        <a th:href="@{/chamados/novo}" class="quick quick--brand">
+            <div class="quick__icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015.3 5.3l-9 9a2 2 0 11-2.8-2.8l9-9z"/><path d="M14 6l4 4"/></svg>
+            </div>
+            <div class="quick__label">Abrir chamado</div>
+            <div class="quick__sub">Envie um pedido</div>
+        </a>
+        <a th:href="@{/areas}" class="quick quick--accent">
+            <div class="quick__icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            </div>
+            <div class="quick__label">Reservar área</div>
+            <div class="quick__sub">Salão, churrasqueira</div>
+        </a>
+        <a th:href="@{/encomendas}" class="quick quick--amber">
+            <div class="quick__icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8L12 3 3 8v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>
+            </div>
+            <div class="quick__label">Encomendas</div>
+            <div class="quick__sub">Receba avisos</div>
+        </a>
+        <a th:href="@{/votacoes}" class="quick quick--gray">
+            <div class="quick__icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+            </div>
+            <div class="quick__label">Votações</div>
+            <div class="quick__sub">Participe</div>
+        </a>
+    </section>
+
+    <!-- ============ MAIN GRID (2-col desktop) ============ -->
+    <div class="home__grid">
+
+        <!-- LEFT: News Portal -->
+        <div class="home__main">
+
+            <div class="home__section-head">
+                <div>
+                    <div class="home__section-eyebrow">Portal de notícias</div>
+                    <h2 class="home__section-title">Últimas do condomínio</h2>
                 </div>
+                <a th:href="@{/noticias}" class="home__section-link">Ver todas →</a>
             </div>
-        </a>
+
+            <!-- News hero (first item) -->
+            <th:block th:if="${newsPreview != null and !newsPreview.isEmpty()}">
+                <a th:with="n=${newsPreview[0]}" th:href="@{/news/{id}(id=${n.id})}" class="news-hero-card">
+                    <div class="news-hero-card__img"
+                         th:style="${n.images != null and !n.images.isEmpty()} ? |background-image: url('/uploads/news/${n.images[0].imageUrl}')| : 'background: linear-gradient(135deg, #0a84c8, #8dc63f);'">
+                        <div class="news-hero-card__gradient"></div>
+                        <span th:if="${n.highlighted}" class="news-hero-card__badge badge badge--red">Destaque</span>
+                    </div>
+                    <div class="news-hero-card__body">
+                        <div class="news-hero-card__meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            <span th:text="${#temporals.format(n.publishDate, 'dd MMM yyyy')}">Data</span>
+                        </div>
+                        <h3 class="news-hero-card__title" th:text="${n.title}">Título</h3>
+                        <p class="news-hero-card__excerpt"
+                           th:text="${#strings.abbreviate(n.content, 140)}">Resumo</p>
+                    </div>
+                </a>
+            </th:block>
+
+            <!-- News feed (remaining) -->
+            <div class="news-feed">
+                <a th:each="n, iter : ${newsPreview}" th:if="${iter.index > 0}"
+                   th:href="@{/news/{id}(id=${n.id})}" class="news-feed__item">
+                    <div class="news-feed__img"
+                         th:style="${n.images != null and !n.images.isEmpty()} ? |background-image: url('/uploads/news/${n.images[0].imageUrl}')| : 'background: linear-gradient(135deg, #e8f4fc, #eef7dd);'"></div>
+                    <div class="news-feed__body">
+                        <div class="news-feed__tags">
+                            <span th:if="${n.highlighted}" class="badge badge--green">Destaque</span>
+                        </div>
+                        <div class="news-feed__title" th:text="${n.title}">Título</div>
+                        <div class="news-feed__meta">
+                            <span th:text="${#temporals.format(n.publishDate, 'dd MMM')}">Data</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div th:if="${newsPreview == null or newsPreview.isEmpty()}" class="empty-state">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                <div>Nenhuma notícia publicada ainda</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Sidebar (tickets + contacts) -->
+        <aside class="home__side">
+
+            <!-- Tickets panel -->
+            <section class="panel">
+                <div class="panel__head">
+                    <div>
+                        <div class="panel__eyebrow">Serviços</div>
+                        <h3 class="panel__title">Meus chamados</h3>
+                    </div>
+                    <a th:href="@{/chamados}" class="panel__link">Ver todos</a>
+                </div>
+
+                <div class="tickets-mini">
+                    <a th:each="t : ${recentTickets}" th:href="@{/chamados/{id}(id=${t.id})}" class="tickets-mini__item">
+                        <div class="tickets-mini__status"
+                             th:classappend="${t.status.name() == 'NOVO'} ? 'is-new' : (${t.status.name() == 'EM_ANDAMENTO'} ? 'is-progress' : (${t.status.name() == 'CONCLUIDO'} ? 'is-done' : 'is-cancelled'))"></div>
+                        <div style="flex:1; min-width:0;">
+                            <div class="tickets-mini__title" th:text="${t.title}">Chamado</div>
+                            <div class="tickets-mini__meta">
+                                <span th:switch="${t.status.name()}">
+                                    <span th:case="'NOVO'" class="badge badge--amber">Aberto</span>
+                                    <span th:case="'EM_ANDAMENTO'" class="badge">Em andamento</span>
+                                    <span th:case="'CONCLUIDO'" class="badge badge--green">Resolvido</span>
+                                    <span th:case="'CANCELADO'" class="badge badge--gray">Cancelado</span>
+                                </span>
+                                <span class="tickets-mini__time" th:text="${#temporals.format(t.updatedAt, 'dd MMM')}">Data</span>
+                            </div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ink-3);"><path d="M9 6l6 6-6 6"/></svg>
+                    </a>
+
+                    <div th:if="${recentTickets == null or recentTickets.isEmpty()}" class="empty-state empty-state--sm">
+                        <div>Você ainda não tem chamados</div>
+                        <a th:href="@{/chamados/novo}" class="btn btn--primary btn--sm" style="margin-top:10px;">Abrir chamado</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contacts panel -->
+            <section class="panel">
+                <div class="panel__head">
+                    <div>
+                        <div class="panel__eyebrow">Contatos</div>
+                        <h3 class="panel__title">Fale com o condomínio</h3>
+                    </div>
+                    <a th:href="@{/contatos}" class="panel__link">Ver todos</a>
+                </div>
+
+                <div class="contacts-modern">
+                    <div th:each="c : ${contacts}" class="contact-card">
+                        <div class="contact-card__avatar" th:style="|background: ${c.color}|" th:text="${c.avatar}">A</div>
+                        <div class="contact-card__body">
+                            <div class="contact-card__name" th:text="${c.name}">Nome</div>
+                            <div class="contact-card__role" th:text="${c.role}">Papel</div>
+                        </div>
+                        <div class="contact-card__actions">
+                            <a th:href="|tel:${c.phone}|" class="contact-btn contact-btn--call" aria-label="Ligar">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                            </a>
+                            <a th:if="${c.whats}" th:href="|https://wa.me/55${#strings.replace(#strings.replace(#strings.replace(c.phone, '(', ''), ')', ''), '-', '')}|" target="_blank" class="contact-btn contact-btn--whats" aria-label="WhatsApp">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4zM12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.5A10 10 0 1012 2z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${contacts == null or contacts.isEmpty()}" class="empty-state empty-state--sm">
+                        <div>Nenhum contato cadastrado</div>
+                    </div>
+                </div>
+            </section>
+        </aside>
     </div>
 
-    <!-- Contacts rail -->
-    <div class="section-head" style="padding-top: 10px;">
-        <div class="section-head__title" style="font-size:20px;">Contatos rápidos</div>
-        <a th:href="@{/contatos}" class="section-head__link">Ver todos</a>
-    </div>
-    <div class="contacts-rail scroll-x">
-        <a th:each="c : ${contacts}" th:href="@{/contatos}" class="contacts-rail__item">
-            <div class="avatar avatar--sm" th:style="|background: ${c.color}|" th:text="${c.avatar}">RA</div>
-            <div>
-                <div class="contacts-rail__name" th:text="${c.name}">Nome</div>
-                <div class="contacts-rail__role" th:text="${c.role}">Papel</div>
-            </div>
-        </a>
-    </div>
-
-    <!-- Tab bar -->
+    <!-- Tab bar (mobile) -->
     <div th:replace="~{fragments/layout :: tabbar('home')}"></div>
 </div>
+
+<!-- Floating Action Button (mobile) -->
+<a th:href="@{/chamados/novo}" class="fab" aria-label="Abrir chamado">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+</a>
 
 </body>
 </html>

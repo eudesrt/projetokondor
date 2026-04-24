@@ -58,7 +58,7 @@ public class ResidentTicketController {
         model.addAttribute("statsDone",
                 totalVisible.stream().filter(t -> t.getStatus().name().equals("CONCLUIDO")).count());
 
-        return "resident/tickets/list";
+        return "chamados/lista";
     }
 
     @Autowired
@@ -69,7 +69,7 @@ public class ResidentTicketController {
         model.addAttribute("ticket", new Ticket());
         model.addAttribute("types", TicketType.values());
         model.addAttribute("helpContacts", helpContactService.findAllActive());
-        return "resident/tickets/form";
+        return "chamados/novo";
     }
 
     @PostMapping("/save")
@@ -85,7 +85,7 @@ public class ResidentTicketController {
     @GetMapping("/view/{id}")
     public String viewTicket(@PathVariable Long id, Model model) {
         model.addAttribute("ticket", ticketService.getTicketById(id));
-        return "resident/tickets/view";
+        return "chamados/detalhe";
     }
 
     @PostMapping("/respond/{id}")
